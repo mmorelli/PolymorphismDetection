@@ -31,10 +31,12 @@ public class MetaClass extends Metaobject
 
     public void trapFieldWrite(String name, Object value) 
     {
-        System.out.println("field write: " + name + " " + value.getClass().getName() + " " + getClassMetaobject().getName());
+    	if (value != null)
+    	{	
+    		System.out.println("field write: " + name + " " + value.getClass().getName() + " " + getClassMetaobject().getName());
         
-        DataContainer.getInstance().addFieldWriteTrap(getClassMetaobject().getName(), name, value.getClass().getName());
-        
+    		DataContainer.getInstance().addFieldWriteTrap(getClassMetaobject().getName(), name, value.getClass().getName());
+    	}
         super.trapFieldWrite(name, value);
     }
 

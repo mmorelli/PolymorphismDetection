@@ -1,9 +1,4 @@
 import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Enumeration;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import javassist.ClassPool;
 import javassist.NotFoundException;
@@ -28,6 +23,12 @@ public class Controller
 		classLoader.setClassPool(pool);
 		classLoader.delegateLoadingOf("DataContainer");
 		
+		// todo search all jars and append them to pathlist
+		pool.appendPathList("D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - public\\bin\\jexample-4.5-391.jar");
+		pool.appendPathList("D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - public\\bin\\junit-4.4.jar");
+		
+		// todo load all interfaces directly
+		classLoader.loadClass("ISquare");
 	}
 	
 	public static void main(String[] args) 
@@ -37,6 +38,10 @@ public class Controller
 		try 
 		{
 			controller = new Controller ();
+			
+			// todo eliminate all fieldname-dublications -> renaming
+			// todo set all field-modifiers to public
+			
 			controller.makeClassesReflectiv ();
 			controller.runMain ("Game", args);
 
@@ -57,6 +62,7 @@ public class Controller
 		
 	}
 	
+
 	private void runMain(String mainClass, String[] args) throws Throwable 
 	{
 		classLoader.run(mainClass, args);
@@ -64,52 +70,73 @@ public class Controller
 
 	private void makeClassesReflectiv() throws Throwable 
 	{
-//		System.out.println ("** makeReflective... ");
+		System.out.println ("** makeReflective... ");
+		classLoader.makeReflective(getNameWithoutExtension("Square.class"), 
+				"MetaClass", 
+				"javassist.tools.reflect.ClassMetaobject");
 		
-		File dir = new File(absolutPathToBinaryDirectory);
-		for (File child : dir.listFiles()) 
-		{
-			String fileName = child.getName();
-			
-			if (fileName.endsWith(".class"))
-			{
-				if (child.exists())
-				{
-					
-					System.out.println ("loaded... " + fileName + ":");	
-					classLoader.loadClass(getNameWithoutExtension(fileName));
-						
+		classLoader.makeReflective(getNameWithoutExtension("Ladder.class"), 
+				"MetaClass", 
+				"javassist.tools.reflect.ClassMetaobject");
+		
+		classLoader.makeReflective(getNameWithoutExtension("Snake.class"), 
+				"MetaClass", 
+				"javassist.tools.reflect.ClassMetaobject");
+		
+		classLoader.makeReflective(getNameWithoutExtension("FirstSquare.class"), 
+				"MetaClass", 
+				"javassist.tools.reflect.ClassMetaobject");
+		
+		classLoader.makeReflective(getNameWithoutExtension("Die.class"), 
+				"MetaClass", 
+				"javassist.tools.reflect.ClassMetaobject");
+		classLoader.makeReflective(getNameWithoutExtension("DieTest.class"), 
+				"MetaClass", 
+				"javassist.tools.reflect.ClassMetaobject");
+		
+		classLoader.makeReflective(getNameWithoutExtension("Game.class"), 
+				"MetaClass", 
+				"javassist.tools.reflect.ClassMetaobject");
+		
+		classLoader.makeReflective(getNameWithoutExtension("LastSquare.class"), 
+				"MetaClass", 
+				"javassist.tools.reflect.ClassMetaobject");
+		
+		classLoader.makeReflective(getNameWithoutExtension("Player.class"), 
+				"MetaClass", 
+				"javassist.tools.reflect.ClassMetaobject");
+		
+		classLoader.makeReflective(getNameWithoutExtension("SimpleGameTest.class"), 
+				"MetaClass", 
+				"javassist.tools.reflect.ClassMetaobject");
+		
+
+		
+		// todo recursive call to make all classes reflective (order of loading is important!)
+		
+//		File dir = new File(absolutPathToBinaryDirectory);
+//		for (File child : dir.listFiles()) 
+//		{
+//			String fileName = child.getName();
+//			
+//			if (fileName.endsWith(".class"))
+//			{
+//				if (child.exists() && !fileName.equals("ISquare.class"))
+//				{
+//					
+//					System.out.println ("loaded... " + fileName + ":");	
+////					classLoader.loadClass(getNameWithoutExtension(fileName));
+//						
 //					classLoader.makeReflective(getNameWithoutExtension(fileName), 
 //										"MetaClass", 
 //										"javassist.tools.reflect.ClassMetaobject");
-				}
-			}
-			else	if (fileName.endsWith(".jar"))
-					{
-						File f = new File ("D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - public\\bin\\jexample-4.5-391.jar");
-						JarFile jarFile = new JarFile(f);
-			            Enumeration e = jarFile.entries();
-
-			            URL[] urls = { new URL("jar:file:" + "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - public\\bin\\jexample-4.5-391.jar"+"!/") };
-			            URLClassLoader URLclassLoader = URLClassLoader.newInstance(urls);
-
-			            while (e.hasMoreElements()) 
-			            {
-			                JarEntry je = (JarEntry) e.nextElement();
-			                if(je.isDirectory() || !je.getName().endsWith(".class"))
-			                {
-			                    continue;
-			                }
-			
-			                String className = je.getName().substring(0,je.getName().length()-6);
-			                className = className.replace('/', '.');
-			                URLclassLoader.loadClass(className);
-			         
-			            }
-					}
-					
-		}
+//				}
+//			}
+//
+//					
+//		}
 	}
+	
 
 	private static String getExtension (String fileName)
 	{
