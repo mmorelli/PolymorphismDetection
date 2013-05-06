@@ -1,37 +1,32 @@
-import java.util.ArrayList;
-
 
 public class DataContainer 
 {
 	private static DataContainer instance = null;
 	
-	private static ArrayList<String> list; 
+	private static MultiMap container = new MultiMap();
 	
 	private DataContainer() 
 	{
-		list = new ArrayList<String>();
+		container = new MultiMap();
 	}
 
 	public static DataContainer getInstance() 
 	{
 	    if (instance == null)
-	    {
 	        instance = new DataContainer();
-	        System.out.println("singleton created");
-	    }
-	
+
 		return instance;
 	}
 	
-	public static void addTrap(String trapName) 
+	public static void addFieldWriteTrap(String classType, String fieldName, String fieldValue) 
 	{
-		list.add (trapName);
-		 System.out.println("ADDED" + trapName);
+		container.add(classType, fieldName, fieldValue); 
 	}
 	
-	public ArrayList<String> getTraps() 
+	
+	public MultiMap getFieldWriteTraps() 
 	{
-		return list;
+		return container;
 	}
 	
 }

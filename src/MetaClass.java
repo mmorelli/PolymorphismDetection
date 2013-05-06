@@ -11,19 +11,19 @@ public class MetaClass extends Metaobject
 
     public Object trapMethodcall(int identifier, Object[] args)	throws Throwable 
     {
-        System.out.println("trapMethodCall: " + getMethodName(identifier) + "() in "
-                				+ getClassMetaobject().getName());
+//        System.out.println("trapMethodCall: " + getMethodName(identifier) + "() in "
+//                				+ getClassMetaobject().getName());
         
-        DataContainer.getInstance().addTrap("methodcall **data");
+//        DataContainer.getInstance().addTrap("methodcall **data");
         
         return super.trapMethodcall(identifier, args);
     }
     
     public Object trapFieldRead(String name) 
     {
-        System.out.println("field read: " + name + " " + getClassMetaobject().getName());
+//        System.out.println("field read: " + name + " " + getClassMetaobject().getName());
         
-        DataContainer.getInstance().addTrap("trapFieldRead **data");
+//        DataContainer.getInstance().addTrap("trapFieldRead **data");
         
         return super.trapFieldRead(name);
     }
@@ -31,9 +31,9 @@ public class MetaClass extends Metaobject
 
     public void trapFieldWrite(String name, Object value) 
     {
-        System.out.println("field write: " + name + " " + value.getClass() + " " + getClassMetaobject().getName());
+        System.out.println("field write: " + name + " " + value.getClass().getName() + " " + getClassMetaobject().getName());
         
-        DataContainer.getInstance().addTrap("trapFieldWrite **data");
+        DataContainer.getInstance().addFieldWriteTrap(getClassMetaobject().getName(), name, value.getClass().getName());
         
         super.trapFieldWrite(name, value);
     }
