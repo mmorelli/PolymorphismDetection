@@ -1,6 +1,9 @@
 import java.io.File;
+import java.nio.file.Files;
+import java.util.ArrayList;
 
 import javassist.ClassPool;
+import javassist.CtClass;
 import javassist.NotFoundException;
 import javassist.tools.reflect.Loader;
 
@@ -8,10 +11,13 @@ import javassist.tools.reflect.Loader;
 public class Controller 
 {
 //	private final String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\Javassist Projects\\Source\\bin";
-	private final String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - public\\bin";
+	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - public\\bin";
 	
 	private ClassPool pool; 
 	private Loader classLoader; 
+	
+	private  ArrayList<String> paths = new ArrayList<String>();
+	private  ArrayList<ClassPoolEntity> classNames = new ArrayList<ClassPoolEntity>();
 	
 	// C'tor
 	//
@@ -22,13 +28,6 @@ public class Controller
 		pool.insertClassPath(absolutPathToBinaryDirectory);
 		classLoader.setClassPool(pool);
 		classLoader.delegateLoadingOf("DataContainer");
-		
-		// todo search all jars and append them to pathlist
-		pool.appendPathList("D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - public\\bin\\jexample-4.5-391.jar");
-		pool.appendPathList("D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - public\\bin\\junit-4.4.jar");
-		
-		// todo load all interfaces directly
-		classLoader.loadClass("ISquare");
 	}
 	
 	public static void main(String[] args) 
@@ -39,10 +38,15 @@ public class Controller
 		{
 			controller = new Controller ();
 			
-			// todo eliminate all fieldname-dublications -> renaming
-			// todo set all field-modifiers to public
+			// TODO eliminate all fieldname-dublications -> renaming
+			// TODO set all field-modifiers to public
+			// TODO delete package includes in code
 			
-			controller.makeClassesReflectiv ();
+			controller.collectClassNames (new File(absolutPathToBinaryDirectory));
+			controller.appendLibPaths();
+			controller.loadInterfaces();
+			controller.makeReflective();
+			
 			controller.runMain ("Game", args);
 
 			
@@ -62,82 +66,129 @@ public class Controller
 		
 	}
 	
-
 	private void runMain(String mainClass, String[] args) throws Throwable 
 	{
 		classLoader.run(mainClass, args);
 	}
 
-	private void makeClassesReflectiv() throws Throwable 
+	
+	private void collectClassNames(File file) 
 	{
-		System.out.println ("** makeReflective... ");
-		classLoader.makeReflective(getNameWithoutExtension("Square.class"), 
-				"MetaClass", 
-				"javassist.tools.reflect.ClassMetaobject");
-		
-		classLoader.makeReflective(getNameWithoutExtension("Ladder.class"), 
-				"MetaClass", 
-				"javassist.tools.reflect.ClassMetaobject");
-		
-		classLoader.makeReflective(getNameWithoutExtension("Snake.class"), 
-				"MetaClass", 
-				"javassist.tools.reflect.ClassMetaobject");
-		
-		classLoader.makeReflective(getNameWithoutExtension("FirstSquare.class"), 
-				"MetaClass", 
-				"javassist.tools.reflect.ClassMetaobject");
-		
-		classLoader.makeReflective(getNameWithoutExtension("Die.class"), 
-				"MetaClass", 
-				"javassist.tools.reflect.ClassMetaobject");
-		classLoader.makeReflective(getNameWithoutExtension("DieTest.class"), 
-				"MetaClass", 
-				"javassist.tools.reflect.ClassMetaobject");
-		
-		classLoader.makeReflective(getNameWithoutExtension("Game.class"), 
-				"MetaClass", 
-				"javassist.tools.reflect.ClassMetaobject");
-		
-		classLoader.makeReflective(getNameWithoutExtension("LastSquare.class"), 
-				"MetaClass", 
-				"javassist.tools.reflect.ClassMetaobject");
-		
-		classLoader.makeReflective(getNameWithoutExtension("Player.class"), 
-				"MetaClass", 
-				"javassist.tools.reflect.ClassMetaobject");
-		
-		classLoader.makeReflective(getNameWithoutExtension("SimpleGameTest.class"), 
-				"MetaClass", 
-				"javassist.tools.reflect.ClassMetaobject");
-		
+		if (file.getName().endsWith(".class") && file.isFile())
+		{
+			System.out.println(file.getName());
+			classNames.add(new ClassPoolEntity (file.getName()));
+			
+			String absoluteFilePath = file.getAbsolutePath();
+			String absoluteDirPath = absoluteFilePath.substring(0, absoluteFilePath.lastIndexOf("\\"));
+			
+			if (!paths.contains(absoluteDirPath))
+				paths.add(absoluteDirPath);
+		}
+		else if (file.getName().endsWith(".jar") && file.isFile())
+		{
+			if (!paths.contains(file.getAbsolutePath()))
+				paths.add(file.getAbsolutePath());
+		}
+	    
+	    if (file.isDirectory())
+	    {
+		    File[] children = file.listFiles();
+		    for (File child : children) 
+		    {
+		    	collectClassNames(child);
+		    }
+	    }
 
-		
-		// todo recursive call to make all classes reflective (order of loading is important!)
-		
-//		File dir = new File(absolutPathToBinaryDirectory);
-//		for (File child : dir.listFiles()) 
-//		{
-//			String fileName = child.getName();
-//			
-//			if (fileName.endsWith(".class"))
-//			{
-//				if (child.exists() && !fileName.equals("ISquare.class"))
-//				{
-//					
-//					System.out.println ("loaded... " + fileName + ":");	
-////					classLoader.loadClass(getNameWithoutExtension(fileName));
-//						
-//					classLoader.makeReflective(getNameWithoutExtension(fileName), 
-//										"MetaClass", 
-//										"javassist.tools.reflect.ClassMetaobject");
-//				}
-//			}
-//
-//					
-//		}
 	}
 	
+	private void appendLibPaths() throws NotFoundException 
+	{
+		for (String path : paths)
+			pool.appendPathList(path);
+	}
+	
+	private void loadInterfaces() throws Throwable 
+	{
+		for (ClassPoolEntity entity : classNames)
+		{
+			CtClass ctClass = pool.get(getNameWithoutExtension(entity.getClassName()));
+			String a  = ctClass.getPackageName();
+			
+			if (ctClass.isInterface())
+			{
+				classLoader.loadClass((ctClass.getName()));
+				entity.setIsLoaded(true);
+//				System.out.println("loaded Interface: " + entity.getClassName());
+			}
+		}
+		
+	}
 
+	private void makeReflective() throws Throwable 
+	{
+		for (ClassPoolEntity entity : classNames)
+			makeClassesReflectiv();
+	}
+
+	
+	private boolean hasFullyLoaded() throws Throwable 
+	{
+		for (ClassPoolEntity entity : classNames)
+		{
+			if (!entity.getIsLoaded())
+				return false;
+		}
+		
+		return true;
+	}
+	
+	private void makeClassesReflectiv() throws Throwable 
+	{
+		while (!hasFullyLoaded())
+		{
+			for (ClassPoolEntity entity : classNames)
+			{
+				CtClass ctClass = pool.get(getNameWithoutExtension(entity.getClassName()));
+				
+				if (!entity.getIsLoaded())
+				{
+					if (ctClass.getSuperclass().getName().equals( "java.lang.Object"))
+					{
+						classLoader.makeReflective((ctClass.getName()), 
+								"MetaClass", 
+								"javassist.tools.reflect.ClassMetaobject");
+						entity.setIsLoaded(true);
+						
+//						System.out.println("loaded superclass: " + entity.getClassName());
+					}
+					else if (getEntityByName(ctClass.getSuperclass().getName() + ".class").getIsLoaded()) 
+					{
+						String name = ctClass.getSuperclass().getName() + ".class";
+						
+						classLoader.makeReflective((ctClass.getName()), 
+								"MetaClass", 
+								"javassist.tools.reflect.ClassMetaobject");
+						entity.setIsLoaded(true);
+						
+//						System.out.println("loaded simpleclass: " + entity.getClassName());
+					}
+				}
+			}
+		}
+	}
+		
+	private ClassPoolEntity getEntityByName(String className) throws Throwable 
+	{
+		for (ClassPoolEntity entity : classNames)
+		{
+			if (entity.getClassName().equals(className))
+				return entity;
+		}
+		
+		return null;
+	}	
+		
 	private static String getExtension (String fileName)
 	{
 		int index = fileName.lastIndexOf('.');
@@ -149,5 +200,4 @@ public class Controller
 		int index = fileName.lastIndexOf('.');
 		return fileName.substring(0, index);
 	}
-
 }
