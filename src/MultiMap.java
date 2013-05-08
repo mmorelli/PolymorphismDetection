@@ -12,20 +12,18 @@ public class MultiMap
 		multiMap = new HashMap<String, ArrayList<String>>(); 
 	}
 	
-	public void add (String fieldType, String fieldname, String fieldValueType)
+	public void add (String key, String value)
 	{
-		String key = fieldType + "-" + fieldname;
-		
 		if (!multiMap.containsKey(key))
 		{
 			ArrayList<String> newList = new ArrayList<String>();
-			newList.add(fieldValueType);
+			newList.add(value);
 			multiMap.put(key, newList);	
 		}
 		else
 		{
-			if (!multiMap.get(key).contains(fieldValueType))
-				multiMap.get(key).add(fieldValueType);
+			if (!multiMap.get(key).contains(value))
+				multiMap.get(key).add(value);
 		}
 	}
 	
@@ -40,21 +38,8 @@ public class MultiMap
 		for (String key : set)
 		{
 			if (getValueCount (key) > 1)
-				System.out.println("Field: " + extractFieldName(key) 
-								+ " (Type:" + extractFieldType(key) + ") is polymorphic");
+				System.out.println(key +  " is polymorphic");
 		}
-	}
-	
-	private String extractFieldName(String key) 
-	{
-		int index = key.lastIndexOf('-');
-		return key.substring(index + 1);
-	}
-	
-	private String extractFieldType(String key) 
-	{
-		int index = key.lastIndexOf('-');
-		return key.substring(0, index);
 	}
 
 	public String toString ()

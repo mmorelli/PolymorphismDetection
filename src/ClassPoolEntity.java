@@ -1,3 +1,4 @@
+
 public class ClassPoolEntity 
 {
 	private String className;

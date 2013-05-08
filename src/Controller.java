@@ -1,5 +1,4 @@
 import java.io.File;
-import java.nio.file.Files;
 import java.util.ArrayList;
 
 import javassist.ClassPool;
@@ -47,6 +46,8 @@ public class Controller
 			controller.loadInterfaces();
 			controller.makeReflective();
 			
+			controller.copyPoolToDataContainer ();
+			
 			controller.runMain ("Game", args);
 
 			
@@ -66,11 +67,15 @@ public class Controller
 		
 	}
 	
+	private void copyPoolToDataContainer() 
+	{
+		DataContainer.getInstance().setPool (this.pool);
+	}
+
 	private void runMain(String mainClass, String[] args) throws Throwable 
 	{
 		classLoader.run(mainClass, args);
 	}
-
 	
 	private void collectClassNames(File file) 
 	{
@@ -132,7 +137,7 @@ public class Controller
 	}
 
 	
-	private boolean hasFullyLoaded() throws Throwable 
+	private boolean allClassesLoaded() throws Throwable 
 	{
 		for (ClassPoolEntity entity : classNames)
 		{
@@ -145,7 +150,7 @@ public class Controller
 	
 	private void makeClassesReflectiv() throws Throwable 
 	{
-		while (!hasFullyLoaded())
+		while (!allClassesLoaded())
 		{
 			for (ClassPoolEntity entity : classNames)
 			{
