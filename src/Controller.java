@@ -1,9 +1,12 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
+
 import javassist.tools.reflect.Loader;
 
 
@@ -11,7 +14,9 @@ public class Controller
 {
 //	private final String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\Javassist Projects\\Source\\bin";
 	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - public\\bin";
-	
+//	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - public - for package testing\\bin";
+//	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - private - no ps\\bin";
+
 	private ClassPool pool; 
 	private Loader classLoader; 
 	
@@ -38,11 +43,17 @@ public class Controller
 			controller = new Controller ();
 			
 			// TODO eliminate all fieldname-dublications -> renaming
-			// TODO set all field-modifiers to public
+			// TODO set all field-modifiers to public - done!
 			// TODO delete package includes in code
 			
+	
 			controller.collectClassNames (new File(absolutPathToBinaryDirectory));
+			
 			controller.appendLibPaths();
+			
+//			controller.renameDublicatedFieldNames();
+			controller.setFieldModifiersToPublic ();
+			
 			controller.loadInterfaces();
 			controller.makeReflective();
 			
@@ -53,6 +64,7 @@ public class Controller
 			
 			MultiMap result = DataContainer.getInstance().getFieldWriteTraps();
 			result.printOut();
+//			result.printAll();
 
 		}
 		catch (NotFoundException e) 
@@ -67,6 +79,16 @@ public class Controller
 		
 	}
 	
+	private void setFieldModifiersToPublic() throws Throwable 
+	{
+		for (ClassPoolEntity entity : this.classNames)
+		{
+			CtClass cc = pool.get(getNameWithoutExtension(entity.getClassName()));
+			cc.instrument (new Rewriter());
+		}
+		
+	}
+
 	private void copyPoolToDataContainer() 
 	{
 		DataContainer.getInstance().setPool (this.pool);
@@ -89,6 +111,8 @@ public class Controller
 			
 			if (!paths.contains(absoluteDirPath))
 				paths.add(absoluteDirPath);
+			
+			DataContainer.getInstance().addPackageNameOfClass (absoluteFilePath);
 		}
 		else if (file.getName().endsWith(".jar") && file.isFile())
 		{
@@ -118,7 +142,6 @@ public class Controller
 		for (ClassPoolEntity entity : classNames)
 		{
 			CtClass ctClass = pool.get(getNameWithoutExtension(entity.getClassName()));
-			String a  = ctClass.getPackageName();
 			
 			if (ctClass.isInterface())
 			{

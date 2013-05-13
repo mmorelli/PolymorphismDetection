@@ -46,6 +46,22 @@ public class MultiMap
 	{
 		return null;
 	}
+
+	public void printAll() 
+	{
+		Set<String> set = multiMap.keySet();
+		for (String key : set)
+		{
+			ArrayList<String> values = multiMap.get(key);
+			for (String value : values)
+			{
+				System.out.println(key +  " " + value);
+			}
+		}
+		
+	}
+
+
 }
 
 

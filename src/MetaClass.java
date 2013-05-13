@@ -34,11 +34,10 @@ public class MetaClass extends Metaobject
     	if (value != null)
     	{	
     		String type = DataContainer.getInstance().getFieldType(getClassMetaobject().getName(), name);
-    		String packageName = DataContainer.getInstance().getPackageName(getClassMetaobject().getName());
+    		String packageName = DataContainer.getInstance().getPackageNameOfClass(getClassMetaobject().getName() + ".class");
 
-    		
-    		System.out.println(packageName + "." + getClassMetaobject().getName() + ":" + packageName + "." 
-    									+ type + "." + name + "  " + packageName + "." + value.getClass().getName());
+//    		System.out.println(packageName + "." + getClassMetaobject().getName() + ":" + packageName + "." 
+//    									+ type + "." + name + "  " + packageName + "." + value.getClass().getName());
     		    
  
     		DataContainer.getInstance().addFieldWriteTrap(packageName + "." + getClassMetaobject().getName() + ":" + packageName + "." 

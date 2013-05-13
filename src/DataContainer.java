@@ -6,13 +6,15 @@ public class DataContainer
 {
 	private static DataContainer instance = null;
 	
-	private static MultiMap container = new MultiMap();
+	private static MultiMap keyValueContainer;
+	private static PackageContainer packageNamesOfClasses;
 	
 	private ClassPool pool;
 	
 	private DataContainer() 
 	{
-		container = new MultiMap();
+		keyValueContainer = new MultiMap();
+		packageNamesOfClasses = new PackageContainer();
 	}
 
 	public static DataContainer getInstance() 
@@ -25,13 +27,13 @@ public class DataContainer
 	
 	public static void addFieldWriteTrap(String key, String value) 
 	{
-		container.add(key, value); 
+		keyValueContainer.add(key, value); 
 	}
 	
 	
 	public MultiMap getFieldWriteTraps() 
 	{
-		return container;
+		return keyValueContainer;
 	}
 
 	public void setPool(ClassPool pool) 
@@ -53,19 +55,18 @@ public class DataContainer
 		return "noFieldType";
 	}
 	
-	public String getPackageName(String className) 
+	public void addPackageNameOfClass(String absoluteFilePath) 
 	{
-		
-		try 
-		{
-			return pool.get(className).getPackageName();
-		} 
-		catch (NotFoundException e) 
-		{
-			e.printStackTrace();
-		}
-		
-		return "noPackageName";
+		packageNamesOfClasses.add (absoluteFilePath);
 	}
 	
+	public String getPackageNameOfClass(String className) 
+	{
+		String packageName = packageNamesOfClasses.getPackageNameOfClass (className);
+		
+		if (packageName == null)
+			return "defaultPackage";
+				
+		return packageName;
+	}	
 }
