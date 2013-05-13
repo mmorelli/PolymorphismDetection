@@ -14,12 +14,14 @@ public class PackageContainer
 	{
 		int posOfLastPathSep = absoluteFilePath.lastIndexOf("\\");
 		String fullClassName = absoluteFilePath.substring(posOfLastPathSep + 1, absoluteFilePath.length());
-		
-		
-		// TODO refac and not use "bin"
-//		int posOfBinPathEnd = absoluteFilePath.indexOf("bin") + 4;
+
 		int posOfBinPathEnd = absoluteFilePath.indexOf("bin") + 3;
-		String packageString = absoluteFilePath.substring(posOfBinPathEnd, posOfLastPathSep);
+		
+		String packageString;
+		if (posOfBinPathEnd != posOfLastPathSep)
+			packageString = absoluteFilePath.substring(posOfBinPathEnd + 1, posOfLastPathSep);
+		else
+			packageString = "defaultPackage";
 		
 		String packageName = packageString.replace('\\', '.');
 		

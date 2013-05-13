@@ -1,8 +1,8 @@
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
-import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
@@ -13,10 +13,15 @@ import javassist.tools.reflect.Loader;
 public class Controller 
 {
 //	private final String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\Javassist Projects\\Source\\bin";
-	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - public\\bin";
+//	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - public\\bin";
 //	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - public - for package testing\\bin";
-//	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - private - no ps\\bin";
+	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - private - no ps\\bin";
+//	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - private - no ps - testingDublicates\\bin";
 
+	
+//	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\MooseJEE-ArgoUML_032-IWRE2012\\MooseJEE-ArgoUML_032-IWRE2012\\src\\ArgoUML_032\\src\\argouml-app\\src\\org";
+	
+	
 	private ClassPool pool; 
 	private Loader classLoader; 
 	
@@ -42,16 +47,13 @@ public class Controller
 		{
 			controller = new Controller ();
 			
-			// TODO eliminate all fieldname-dublications -> renaming
-			// TODO set all field-modifiers to public - done!
 			// TODO delete package includes in code
 			
-	
 			controller.collectClassNames (new File(absolutPathToBinaryDirectory));
 			
 			controller.appendLibPaths();
 			
-//			controller.renameDublicatedFieldNames();
+			controller.renameDublicatedFieldNames();
 			controller.setFieldModifiersToPublic ();
 			
 			controller.loadInterfaces();
@@ -79,14 +81,44 @@ public class Controller
 		
 	}
 	
+	private void renameDublicatedFieldNames() throws Throwable 
+	{
+		MultiMap fieldNames = new MultiMap();
+		for (ClassPoolEntity entity : this.classNames)
+		{
+			CtClass cc = pool.get(getNameWithoutExtension(entity.getClassName()));	
+			cc.instrument (new FieldNameCollector(cc.getName(), fieldNames));	
+		}
+		
+		HashMap<String, String> dublicates = getDublicatedFieldNames (fieldNames);
+		
+		renameDublicates (dublicates);
+	}
+	
+	private HashMap<String, String> getDublicatedFieldNames(MultiMap fieldNames) 
+	{
+		HashMap<String, String> dublicateFieldNames = new HashMap<String, String>();
+		dublicateFieldNames = fieldNames.getDublicates ();
+		return dublicateFieldNames;
+	}
+	
+	private void renameDublicates(HashMap<String, String> dublicates) throws Throwable 
+	{
+		Set<String> set = dublicates.keySet();
+		for (String key : set)
+		{
+			CtClass cc = pool.get(key);	
+			cc.instrument (new FieldNameRewriter(dublicates.get(key)));
+		}
+	}
+
 	private void setFieldModifiersToPublic() throws Throwable 
 	{
 		for (ClassPoolEntity entity : this.classNames)
 		{
 			CtClass cc = pool.get(getNameWithoutExtension(entity.getClassName()));
-			cc.instrument (new Rewriter());
+			cc.instrument (new ModifierRewriter());
 		}
-		
 	}
 
 	private void copyPoolToDataContainer() 
@@ -147,7 +179,6 @@ public class Controller
 			{
 				classLoader.loadClass((ctClass.getName()));
 				entity.setIsLoaded(true);
-//				System.out.println("loaded Interface: " + entity.getClassName());
 			}
 		}
 		
@@ -187,8 +218,6 @@ public class Controller
 								"MetaClass", 
 								"javassist.tools.reflect.ClassMetaobject");
 						entity.setIsLoaded(true);
-						
-//						System.out.println("loaded superclass: " + entity.getClassName());
 					}
 					else if (getEntityByName(ctClass.getSuperclass().getName() + ".class").getIsLoaded()) 
 					{
@@ -198,8 +227,6 @@ public class Controller
 								"MetaClass", 
 								"javassist.tools.reflect.ClassMetaobject");
 						entity.setIsLoaded(true);
-						
-//						System.out.println("loaded simpleclass: " + entity.getClassName());
 					}
 				}
 			}

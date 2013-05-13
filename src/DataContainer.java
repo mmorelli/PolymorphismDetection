@@ -30,7 +30,6 @@ public class DataContainer
 		keyValueContainer.add(key, value); 
 	}
 	
-	
 	public MultiMap getFieldWriteTraps() 
 	{
 		return keyValueContainer;
@@ -64,9 +63,6 @@ public class DataContainer
 	{
 		String packageName = packageNamesOfClasses.getPackageNameOfClass (className);
 		
-		if (packageName == null)
-			return "defaultPackage";
-				
 		return packageName;
 	}	
 }

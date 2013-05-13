@@ -61,6 +61,50 @@ public class MultiMap
 		
 	}
 
+	// This method returns a Multimap with the fieldnames wich are twice or more seen
+	//
+	public HashMap<String, String> getDublicates() 
+	{
+		HashMap<String, String> dublicates = new HashMap<String, String> ();
+		
+		Set<String> set = multiMap.keySet();
+		for (String key : set)
+		{
+			ArrayList<String> values = multiMap.get(key);
+			for (String value : values)
+			{
+				System.out.println(key +  " " + value);
+				
+				if (containsValueMoreThanOneTime(value))
+					dublicates.put(key, value);
+			}
+		}
+		
+		return dublicates; 
+	}
+
+	private boolean containsValueMoreThanOneTime(String value) 
+	{
+		int valueCount = 0;
+		
+		Set<String> set = multiMap.keySet();
+		for (String key : set)
+		{
+			ArrayList<String> values = multiMap.get(key);
+			for (String valueOfMultiMap : values)
+			{
+				if (valueOfMultiMap.equals(value))
+				{
+					valueCount++;
+					
+					if (valueCount > 1)
+						return true;
+				}
+			}
+		}
+		
+		return false;
+	}
 
 }
 
