@@ -12,7 +12,7 @@ public class PackageContainer
 	
 	public void add (String absoluteFilePath) 
 	{
-		int posOfLastPathSep = absoluteFilePath.lastIndexOf("\\");
+		int posOfLastPathSep = absoluteFilePath.lastIndexOf(System.getProperty("file.separator"));
 		String fullClassName = absoluteFilePath.substring(posOfLastPathSep + 1, absoluteFilePath.length());
 
 		int posOfBinPathEnd = absoluteFilePath.indexOf("bin") + 3;
@@ -23,7 +23,8 @@ public class PackageContainer
 		else
 			packageString = "defaultPackage";
 		
-		String packageName = packageString.replace('\\', '.');
+		String pathDelimiter = System.getProperty("file.separator");
+		String packageName = packageString.replace(pathDelimiter.charAt(0), '.');
 		
 		map.add(new PackageAndClassPair (fullClassName, packageName)); 
 	}

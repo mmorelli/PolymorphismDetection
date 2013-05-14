@@ -15,9 +15,10 @@ public class Controller
 //	private final String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\Javassist Projects\\Source\\bin";
 //	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - public\\bin";
 //	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - public - for package testing\\bin";
-	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - private - no ps\\bin";
+	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders\\bin";
+//	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - private - no ps\\bin";
+//	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\ESE projects\\ese2011-team2-master\\eclipse\\master";
 //	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - private - no ps - testingDublicates\\bin";
-
 	
 //	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\MooseJEE-ArgoUML_032-IWRE2012\\MooseJEE-ArgoUML_032-IWRE2012\\src\\ArgoUML_032\\src\\argouml-app\\src\\org";
 	
@@ -61,8 +62,7 @@ public class Controller
 			
 			controller.copyPoolToDataContainer ();
 			
-			controller.runMain ("Game", args);
-
+			controller.runMain ("snakes.Game", args);
 			
 			MultiMap result = DataContainer.getInstance().getFieldWriteTraps();
 			result.printOut();
@@ -86,7 +86,9 @@ public class Controller
 		MultiMap fieldNames = new MultiMap();
 		for (ClassPoolEntity entity : this.classNames)
 		{
-			CtClass cc = pool.get(getNameWithoutExtension(entity.getClassName()));	
+			String prefix = DataContainer.getInstance().getPackagePrefix(entity.getClassName());
+			
+			CtClass cc = pool.get(prefix + getNameWithoutExtension(entity.getClassName()));
 			cc.instrument (new FieldNameCollector(cc.getName(), fieldNames));	
 		}
 		
@@ -116,7 +118,9 @@ public class Controller
 	{
 		for (ClassPoolEntity entity : this.classNames)
 		{
-			CtClass cc = pool.get(getNameWithoutExtension(entity.getClassName()));
+			String prefix = DataContainer.getInstance().getPackagePrefix(entity.getClassName());
+			
+			CtClass cc = pool.get(prefix + getNameWithoutExtension(entity.getClassName()));
 			cc.instrument (new ModifierRewriter());
 		}
 	}
@@ -139,7 +143,7 @@ public class Controller
 			classNames.add(new ClassPoolEntity (file.getName()));
 			
 			String absoluteFilePath = file.getAbsolutePath();
-			String absoluteDirPath = absoluteFilePath.substring(0, absoluteFilePath.lastIndexOf("\\"));
+			String absoluteDirPath = absoluteFilePath.substring(0, absoluteFilePath.lastIndexOf(System.getProperty("file.separator")));
 			
 			if (!paths.contains(absoluteDirPath))
 				paths.add(absoluteDirPath);
@@ -173,10 +177,11 @@ public class Controller
 	{
 		for (ClassPoolEntity entity : classNames)
 		{
-			CtClass ctClass = pool.get(getNameWithoutExtension(entity.getClassName()));
+			String prefix = DataContainer.getInstance().getPackagePrefix(entity.getClassName());
+			CtClass ctClass = pool.get(prefix + getNameWithoutExtension(entity.getClassName()));
 			
 			if (ctClass.isInterface())
-			{
+			{	
 				classLoader.loadClass((ctClass.getName()));
 				entity.setIsLoaded(true);
 			}
@@ -208,7 +213,8 @@ public class Controller
 		{
 			for (ClassPoolEntity entity : classNames)
 			{
-				CtClass ctClass = pool.get(getNameWithoutExtension(entity.getClassName()));
+				String prefix = DataContainer.getInstance().getPackagePrefix(entity.getClassName());
+				CtClass ctClass = pool.get(prefix + getNameWithoutExtension(entity.getClassName()));
 				
 				if (!entity.getIsLoaded())
 				{
@@ -219,7 +225,7 @@ public class Controller
 								"javassist.tools.reflect.ClassMetaobject");
 						entity.setIsLoaded(true);
 					}
-					else if (getEntityByName(ctClass.getSuperclass().getName() + ".class").getIsLoaded()) 
+					else if (getEntityByName(getExtension(ctClass.getSuperclass().getName()) + ".class").getIsLoaded()) 
 					{
 						String name = ctClass.getSuperclass().getName() + ".class";
 						
@@ -233,6 +239,8 @@ public class Controller
 		}
 	}
 		
+	
+
 	private ClassPoolEntity getEntityByName(String className) throws Throwable 
 	{
 		for (ClassPoolEntity entity : classNames)
@@ -255,4 +263,5 @@ public class Controller
 		int index = fileName.lastIndexOf('.');
 		return fileName.substring(0, index);
 	}
+	
 }

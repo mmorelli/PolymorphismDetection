@@ -65,4 +65,14 @@ public class DataContainer
 		
 		return packageName;
 	}	
+	
+	public String getPackagePrefix(String className) 
+	{
+		String packageName = packageNamesOfClasses.getPackageNameOfClass (className);
+		
+		if (packageName.equals("defaultPackage"))
+			return "";
+		else 
+			return packageName +".";
+	}
 }
