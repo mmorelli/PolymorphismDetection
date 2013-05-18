@@ -37,7 +37,7 @@ public class Controller
 		classLoader = new Loader();
 		pool.insertClassPath(absolutPathToBinaryDirectory);
 		classLoader.setClassPool(pool);
-		classLoader.delegateLoadingOf("DataContainer");
+		classLoader.delegateLoadingOf("DynamicDataContainer");
 	}
 	
 	public static void main(String[] args) 
@@ -47,6 +47,9 @@ public class Controller
 		try 
 		{
 			controller = new Controller ();
+			
+			StaticDetector sd = new StaticDetector (absolutPathToBinaryDirectory);
+			sd.run ();
 			
 			// TODO delete package includes in code
 			
@@ -64,7 +67,7 @@ public class Controller
 			
 			controller.runMain ("snakes.Game", args);
 			
-			MultiMap result = DataContainer.getInstance().getFieldWriteTraps();
+			MultiMap result = DynamicDataContainer.getInstance().getFieldWriteTraps();
 			result.printOut();
 //			result.printAll();
 
@@ -86,7 +89,7 @@ public class Controller
 		MultiMap fieldNames = new MultiMap();
 		for (ClassPoolEntity entity : this.classNames)
 		{
-			String prefix = DataContainer.getInstance().getPackagePrefix(entity.getClassName());
+			String prefix = DynamicDataContainer.getInstance().getPackagePrefix(entity.getClassName());
 			
 			CtClass cc = pool.get(prefix + getNameWithoutExtension(entity.getClassName()));
 			cc.instrument (new FieldNameCollector(cc.getName(), fieldNames));	
@@ -118,7 +121,7 @@ public class Controller
 	{
 		for (ClassPoolEntity entity : this.classNames)
 		{
-			String prefix = DataContainer.getInstance().getPackagePrefix(entity.getClassName());
+			String prefix = DynamicDataContainer.getInstance().getPackagePrefix(entity.getClassName());
 			
 			CtClass cc = pool.get(prefix + getNameWithoutExtension(entity.getClassName()));
 			cc.instrument (new ModifierRewriter());
@@ -127,7 +130,7 @@ public class Controller
 
 	private void copyPoolToDataContainer() 
 	{
-		DataContainer.getInstance().setPool (this.pool);
+		DynamicDataContainer.getInstance().setPool (this.pool);
 	}
 
 	private void runMain(String mainClass, String[] args) throws Throwable 
@@ -148,7 +151,7 @@ public class Controller
 			if (!paths.contains(absoluteDirPath))
 				paths.add(absoluteDirPath);
 			
-			DataContainer.getInstance().addPackageNameOfClass (absoluteFilePath);
+			DynamicDataContainer.getInstance().addPackageNameOfClass (absoluteFilePath);
 		}
 		else if (file.getName().endsWith(".jar") && file.isFile())
 		{
@@ -177,7 +180,7 @@ public class Controller
 	{
 		for (ClassPoolEntity entity : classNames)
 		{
-			String prefix = DataContainer.getInstance().getPackagePrefix(entity.getClassName());
+			String prefix = DynamicDataContainer.getInstance().getPackagePrefix(entity.getClassName());
 			CtClass ctClass = pool.get(prefix + getNameWithoutExtension(entity.getClassName()));
 			
 			if (ctClass.isInterface())
@@ -213,7 +216,7 @@ public class Controller
 		{
 			for (ClassPoolEntity entity : classNames)
 			{
-				String prefix = DataContainer.getInstance().getPackagePrefix(entity.getClassName());
+				String prefix = DynamicDataContainer.getInstance().getPackagePrefix(entity.getClassName());
 				CtClass ctClass = pool.get(prefix + getNameWithoutExtension(entity.getClassName()));
 				
 				if (!entity.getIsLoaded())
