@@ -51,8 +51,6 @@ public class Controller
 			StaticDetector sd = new StaticDetector (absolutPathToBinaryDirectory);
 			sd.run ();
 			
-			// TODO delete package includes in code
-			
 			controller.collectClassNames (new File(absolutPathToBinaryDirectory));
 			
 			controller.appendLibPaths();
@@ -68,8 +66,8 @@ public class Controller
 			controller.runMain ("snakes.Game", args);
 			
 			MultiMap result = DynamicDataContainer.getInstance().getFieldWriteTraps();
-			result.printOut();
-//			result.printAll();
+			result.printPolymorphicFields();
+			result.printDump();
 
 		}
 		catch (NotFoundException e) 

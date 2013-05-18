@@ -32,32 +32,36 @@ public class MultiMap
 		return multiMap.get(key).size();		
 	}
 	
-	public void printOut ()
+	public void printPolymorphicFields ()
 	{
+		System.out.println("***Polymorphic Fields:***");
+		
 		Set<String> set = multiMap.keySet();
 		for (String key : set)
 		{
 			if (getValueCount (key) > 1)
-				System.out.println(key +  " is polymorphic");
+				System.out.println(key);
 		}
+		
+		System.out.println("***Polymorphic Fields end***");
 	}
 
-	public String toString ()
+	public void printDump() 
 	{
-		return null;
-	}
-
-	public void printAll() 
-	{
+		System.out.println("***Dump of MultiMap:***");
+		
 		Set<String> set = multiMap.keySet();
 		for (String key : set)
 		{
+			System.out.println("KEY: " + key);
 			ArrayList<String> values = multiMap.get(key);
 			for (String value : values)
 			{
-				System.out.println(key +  " " + value);
+				System.out.println(" VALUE(S): " + value);
 			}
 		}
+		
+		System.out.println("***Dump end***");
 		
 	}
 

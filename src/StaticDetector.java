@@ -29,8 +29,8 @@ public class StaticDetector
 		MultiMap result = StaticDataContainer.getInstance().getMultiMap();
 		
 		System.out.println("RESULT..");
-		result.printOut();
-		result.printAll();
+		result.printPolymorphicFields();
+		result.printDump();
 	}
 	
 	
