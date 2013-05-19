@@ -47,9 +47,9 @@ public class StaticDataContainer
 	//
 	private void mergeKeyAndValues() 
 	{
-		 HashMap <String, String> a = keys;
-		 HashMap <String, String> b = values;
-		
+		HashMap <String, String> a = keys;
+		HashMap <String, String> b = values;
+
 		
 		Set<String> set = keys.keySet();
 		for (String key : set)

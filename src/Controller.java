@@ -21,7 +21,7 @@ public class Controller
 //	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-SnakesAndLadders - private - no ps - testingDublicates\\bin";
 	
 //	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\MooseJEE-ArgoUML_032-IWRE2012\\MooseJEE-ArgoUML_032-IWRE2012\\src\\ArgoUML_032\\src\\argouml-app\\src\\org";
-	
+//	private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\lectures-p2-examples\\p2-TicTacToe\\p2-TicTacToe-v9\\bin";
 	
 	private ClassPool pool; 
 	private Loader classLoader; 

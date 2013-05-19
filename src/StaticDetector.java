@@ -10,15 +10,12 @@ public class StaticDetector
 {
 	private String absolutPathToBinaryDirectory;
 	private ClassPool pool;
-	private String curPackageName;
-	
 	
 	public StaticDetector (String absolutPathToBinaryDirectory) throws Throwable
 	{
 		this.absolutPathToBinaryDirectory = absolutPathToBinaryDirectory;
 		pool = ClassPool.getDefault();	
 		pool.insertClassPath(absolutPathToBinaryDirectory);
-		curPackageName = "";
 	}
 
 	public void run() throws NotFoundException, CannotCompileException 
@@ -38,15 +35,14 @@ public class StaticDetector
 	{
 		if (file.getName().endsWith(".class") && file.isFile())
 		{
-			CtClass ctClass = pool.get(curPackageName + getNameWithoutExtension(file.getName()));
-			ctClass.instrument (new StaticFieldReader(curPackageName));
+			String packageName = getPackageName (file.getAbsolutePath());
+			
+			CtClass ctClass = pool.get(packageName + getNameWithoutExtension(file.getName()));
+			ctClass.instrument (new StaticFieldReader());
 		}
 	    
 	    if (file.isDirectory())
 	    {
-	    	if (!file.getName().equals("bin"))
-	    		curPackageName += file.getName() + ".";
-	    	
 		    File[] children = file.listFiles();
 		    for (File child : children) 
 		    {
@@ -56,7 +52,24 @@ public class StaticDetector
 
 	}
 	
-	private static String getNameWithoutExtension (String fileName)
+	private String getPackageName (String absoluteFilePath)
+	{
+		int posOfLastPathSep = absoluteFilePath.lastIndexOf(System.getProperty("file.separator"));
+		int posOfBinPathEnd = absoluteFilePath.indexOf("bin") + 3;
+		
+		String packageName;
+		if (posOfBinPathEnd != posOfLastPathSep)
+		{
+			packageName = absoluteFilePath.substring(posOfBinPathEnd + 1, posOfLastPathSep);
+			packageName = packageName.replace(System.getProperty("file.separator").charAt(0), '.') + ".";
+		}
+		else
+			packageName = "";
+
+		return packageName;
+	}
+	
+	private String getNameWithoutExtension (String fileName)
 	{
 		int index = fileName.lastIndexOf('.');
 		return fileName.substring(0, index);

@@ -1,5 +1,3 @@
-import javassist.CodeConverter;
-import javassist.CtClass;
 import javassist.NotFoundException;
 import javassist.expr.ExprEditor;
 import javassist.expr.FieldAccess;
@@ -7,11 +5,9 @@ import javassist.expr.FieldAccess;
 
 public class StaticFieldReader extends ExprEditor 
 {
-	private String packageName;
-	
-	public StaticFieldReader(String packageName) 
+	public StaticFieldReader() 
 	{
-		this.packageName = packageName;
+
 	}
 
 	public void edit (FieldAccess f)
