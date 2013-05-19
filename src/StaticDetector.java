@@ -23,11 +23,6 @@ public class StaticDetector
 		System.out.println("run StaticDetector..");
 		
 		iterateClasses (new File (absolutPathToBinaryDirectory));
-		MultiMap result = StaticDataContainer.getInstance().getMultiMap();
-		
-		System.out.println("RESULT..");
-		result.printPolymorphicFields();
-		result.printDump();
 	}
 	
 	
@@ -73,6 +68,11 @@ public class StaticDetector
 	{
 		int index = fileName.lastIndexOf('.');
 		return fileName.substring(0, index);
+	}
+
+	public MultiMap getResult() 
+	{
+		return StaticDataContainer.getInstance().getMultiMap();
 	}
 
 }

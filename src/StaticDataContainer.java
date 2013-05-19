@@ -24,7 +24,6 @@ public class StaticDataContainer
 		return instance;
 	}
 
-
 	public void addFieldKey(String id, String keyString) 
 	{
 		keys.put(id, keyString);
@@ -47,10 +46,6 @@ public class StaticDataContainer
 	//
 	private void mergeKeyAndValues() 
 	{
-		HashMap <String, String> a = keys;
-		HashMap <String, String> b = values;
-
-		
 		Set<String> set = keys.keySet();
 		for (String key : set)
 		{
