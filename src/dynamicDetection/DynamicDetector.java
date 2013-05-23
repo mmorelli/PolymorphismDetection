@@ -115,7 +115,14 @@ public class DynamicDetector
 
 	private void runMain(String mainClass, String[] args) throws Throwable 
 	{
-		classLoader.run(mainClass, args);
+		try
+		{
+			classLoader.run(mainClass, args);
+		}
+		catch (NullPointerException e) 
+		{
+			System.out.println("Aborted simulation run!");
+		}
 	}
 	
 	private void collectClassNames(File file) 
@@ -201,7 +208,9 @@ public class DynamicDetector
 				
 				if (!entity.getIsLoaded())
 				{
-					if (ctClass.getSuperclass().getName().equals( "java.lang.Object"))
+					String a = ctClass.getSuperclass().getName();
+					
+					if (isRootClass (ctClass))
 					{
 						classLoader.makeReflective((ctClass.getName()), 
 								"dynamicDetection.MetaClass", 
@@ -221,6 +230,17 @@ public class DynamicDetector
 	}
 		
 	
+
+	private boolean isRootClass(CtClass ctClass) throws NotFoundException 
+	{
+		String superClassName = ctClass.getSuperclass().getName();
+		
+		for (ClassPoolEntity entity : classNames)
+			if (entity.getClassName().equals(superClassName))
+					return false;
+		
+		return true;
+	}
 
 	private ClassPoolEntity getEntityByName(String className) throws Throwable 
 	{
