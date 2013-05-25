@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import controller.Detector;
 import controller.MultiMap;
 
+import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
@@ -14,25 +16,30 @@ import javassist.NotFoundException;
 import javassist.tools.reflect.Loader;
 
 
-public class DynamicDetector 
+public class DynamicDetector extends Detector
 {
-	private String absolutPathToBinaryDirectory;
+	private int DEBUG_COUNTER_MADE_REFLECTIVE = 0;
+	
 	private ClassPool pool; 
 	private Loader classLoader; 
 	
-	private ArrayList<String> paths = new ArrayList<String>();
-	private ArrayList<ClassPoolEntity> classNames = new ArrayList<ClassPoolEntity>();
+	private ArrayList<String> paths;
+	private ArrayList<ClassPoolEntity> classNames;
 	
 	// C'tor
 	//
-	public DynamicDetector (String absolutPathToBinaryDirectory) throws Throwable
+	public DynamicDetector (String absolutPathToBinaryDirectory) throws NotFoundException, CannotCompileException  
 	{
-		this.absolutPathToBinaryDirectory = absolutPathToBinaryDirectory; 
+		super (absolutPathToBinaryDirectory);
+		
 		pool = ClassPool.getDefault();	
 		classLoader = new Loader();
 		pool.insertClassPath(absolutPathToBinaryDirectory);
 		classLoader.setClassPool(pool);
 		classLoader.delegateLoadingOf("dynamicDetection.DynamicDataContainer");
+		
+		paths = new ArrayList<String>();
+		classNames = new ArrayList<ClassPoolEntity>();
 	}
 	
 	public void run(String mainName, String[] args) 
@@ -41,7 +48,7 @@ public class DynamicDetector
 		{
 			collectClassNames (new File(absolutPathToBinaryDirectory));
 			
-			appendLibPaths();
+			appendPaths();
 			
 			renameDublicatedFieldNames();
 			setFieldModifiersToPublic ();
@@ -64,14 +71,50 @@ public class DynamicDetector
 		
 	}
 	
+	private void collectClassNames(File file) 
+	{
+		if (file.getName().endsWith(".class") && file.isFile())
+		{
+			String packageName = getPackageNameFromPath (file.getAbsolutePath());
+			classNames.add(new ClassPoolEntity (packageName + file.getName()));
+			
+			String absoluteDirPath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(System.getProperty("file.separator")));
+			addPath (absoluteDirPath);
+		}
+		else if (file.getName().endsWith(".jar") && file.isFile())
+		{
+			addPath (file.getAbsolutePath());
+		}
+	    
+	    if (file.isDirectory())
+	    {
+		    File[] children = file.listFiles();
+		    for (File child : children) 
+		    {
+		    	collectClassNames(child);
+		    }
+	    }
+
+	}
+	
+	private void addPath(String absoluteDirPath) 
+	{
+		if (!paths.contains(absoluteDirPath))
+			paths.add(absoluteDirPath);
+	}
+	
+	private void appendPaths() throws NotFoundException 
+	{
+		for (String path : paths)
+			pool.appendPathList(path);
+	}
+	
 	private void renameDublicatedFieldNames() throws Throwable 
 	{
 		MultiMap fieldNames = new MultiMap();
 		for (ClassPoolEntity entity : this.classNames)
 		{
-			String prefix = DynamicDataContainer.getInstance().getPackagePrefix(entity.getClassName());
-			
-			CtClass cc = pool.get(prefix + getNameWithoutExtension(entity.getClassName()));
+			CtClass cc = pool.get(getNameWithoutExtension(entity.getClassName()));
 			cc.instrument (new FieldNameCollector(cc.getName(), fieldNames));	
 		}
 		
@@ -84,6 +127,7 @@ public class DynamicDetector
 	{
 		HashMap<String, String> dublicateFieldNames = new HashMap<String, String>();
 		dublicateFieldNames = fieldNames.getDublicates ();
+		
 		return dublicateFieldNames;
 	}
 	
@@ -101,9 +145,7 @@ public class DynamicDetector
 	{
 		for (ClassPoolEntity entity : this.classNames)
 		{
-			String prefix = DynamicDataContainer.getInstance().getPackagePrefix(entity.getClassName());
-			
-			CtClass cc = pool.get(prefix + getNameWithoutExtension(entity.getClassName()));
+			CtClass cc = pool.get(getNameWithoutExtension(entity.getClassName()));
 			cc.instrument (new ModifierRewriter());
 		}
 	}
@@ -113,76 +155,28 @@ public class DynamicDetector
 		DynamicDataContainer.getInstance().setPool (this.pool);
 	}
 
-	private void runMain(String mainClass, String[] args) throws Throwable 
-	{
-		try
-		{
-			classLoader.run(mainClass, args);
-		}
-		catch (NullPointerException e) 
-		{
-			System.out.println("Aborted simulation run!");
-		}
-	}
-	
-	private void collectClassNames(File file) 
-	{
-		if (file.getName().endsWith(".class") && file.isFile())
-		{
-			System.out.println(file.getName());
-			classNames.add(new ClassPoolEntity (file.getName()));
-			
-			String absoluteFilePath = file.getAbsolutePath();
-			String absoluteDirPath = absoluteFilePath.substring(0, absoluteFilePath.lastIndexOf(System.getProperty("file.separator")));
-			
-			if (!paths.contains(absoluteDirPath))
-				paths.add(absoluteDirPath);
-			
-			DynamicDataContainer.getInstance().addPackageNameOfClass (absoluteFilePath);
-		}
-		else if (file.getName().endsWith(".jar") && file.isFile())
-		{
-			if (!paths.contains(file.getAbsolutePath()))
-				paths.add(file.getAbsolutePath());
-		}
-	    
-	    if (file.isDirectory())
-	    {
-		    File[] children = file.listFiles();
-		    for (File child : children) 
-		    {
-		    	collectClassNames(child);
-		    }
-	    }
-
-	}
-	
-	private void appendLibPaths() throws NotFoundException 
-	{
-		for (String path : paths)
-			pool.appendPathList(path);
-	}
-	
 	private void loadInterfaces() throws Throwable 
 	{
 		for (ClassPoolEntity entity : classNames)
 		{
-			String prefix = DynamicDataContainer.getInstance().getPackagePrefix(entity.getClassName());
-			CtClass ctClass = pool.get(prefix + getNameWithoutExtension(entity.getClassName()));
+			CtClass ctClass = pool.get(getNameWithoutExtension(entity.getClassName()));
 			
 			if (ctClass.isInterface())
 			{	
 				classLoader.loadClass((ctClass.getName()));
 				entity.setIsLoaded(true);
+				
+				System.out.println ("loaded interface: " + ctClass.getName());
 			}
 		}
-		
 	}
 
 	private void makeReflective() throws Throwable 
 	{
 		for (ClassPoolEntity entity : classNames)
 			makeClassesReflectiv();
+		
+		System.out.println ("****madereflective: " + DEBUG_COUNTER_MADE_REFLECTIVE + " files");
 	}
 
 	
@@ -197,32 +191,28 @@ public class DynamicDetector
 		return true;
 	}
 	
+	// Makes all Classes in "classNames" reflective in correct order (parentclasses first!)
+	//
 	private void makeClassesReflectiv() throws Throwable 
 	{
 		while (!allClassesLoaded())
 		{
 			for (ClassPoolEntity entity : classNames)
 			{
-				String prefix = DynamicDataContainer.getInstance().getPackagePrefix(entity.getClassName());
-				CtClass ctClass = pool.get(prefix + getNameWithoutExtension(entity.getClassName()));
+				CtClass ctClass = pool.get(getNameWithoutExtension(entity.getClassName()));
 				
 				if (!entity.getIsLoaded())
 				{
-					String a = ctClass.getSuperclass().getName();
-					
-					if (isRootClass (ctClass))
+					if (parentClassIsLoaded (ctClass))
 					{
 						classLoader.makeReflective((ctClass.getName()), 
 								"dynamicDetection.MetaClass", 
 								"javassist.tools.reflect.ClassMetaobject");
 						entity.setIsLoaded(true);
-					}
-					else if (getEntityByName(getExtension(ctClass.getSuperclass().getName()) + ".class").getIsLoaded()) 
-					{
-						classLoader.makeReflective((ctClass.getName()), 
-								"dynamicDetection.MetaClass", 
-								"javassist.tools.reflect.ClassMetaobject");
-						entity.setIsLoaded(true);
+						
+						System.out.println ("madereflective: " + entity.getClassName());
+						
+						DEBUG_COUNTER_MADE_REFLECTIVE++;
 					}
 				}
 			}
@@ -231,40 +221,41 @@ public class DynamicDetector
 		
 	
 
-	private boolean isRootClass(CtClass ctClass) throws NotFoundException 
+	private boolean parentClassIsLoaded(CtClass ctClass) throws NotFoundException 
 	{
-		String superClassName = ctClass.getSuperclass().getName();
+		String parentClassName = ctClass.getSuperclass().getName() + ".class";
 		
+		// If parentclass is not inside "classNames" it should be loaded
+		//
+		boolean found = false;
 		for (ClassPoolEntity entity : classNames)
-			if (entity.getClassName().equals(superClassName))
-					return false;
+			if (entity.getClassName().equals(parentClassName))
+				found = true;
 		
-		return true;
-	}
-
-	private ClassPoolEntity getEntityByName(String className) throws Throwable 
-	{
+		if (!found)
+			return true;
+		
+		// If parentclass is inside "classNames" and loaded, load class 
+		// 
 		for (ClassPoolEntity entity : classNames)
-		{
-			if (entity.getClassName().equals(className))
-				return entity;
-		}
+			if (entity.getClassName().equals(parentClassName) && entity.getIsLoaded())
+					return true;
 		
-		return null;
-	}	
-		
-	private static String getExtension (String fileName)
-	{
-		int index = fileName.lastIndexOf('.');
-		return fileName.substring(index+1);
+		return false;
 	}
 	
-	private static String getNameWithoutExtension (String fileName)
+	private void runMain(String mainClass, String[] args)
 	{
-		int index = fileName.lastIndexOf('.');
-		return fileName.substring(0, index);
+		try
+		{
+			classLoader.run(mainClass, args);
+		}
+		catch (Throwable e) 
+		{
+			System.out.println("### ABORTED SIMULATION-RUN! (in dynamicDetector.runMain) ###");
+		}
 	}
-
+		
 	public MultiMap getResult() 
 	{
 		return DynamicDataContainer.getInstance().getFieldWriteTraps();

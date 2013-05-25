@@ -3,7 +3,6 @@ import javassist.NotFoundException;
 import javassist.expr.ExprEditor;
 import javassist.expr.FieldAccess;
 
-
 public class StaticFieldReader extends ExprEditor 
 {
 	public StaticFieldReader() 
@@ -14,7 +13,7 @@ public class StaticFieldReader extends ExprEditor
 	public void edit (FieldAccess f)
 	{
 		try 
-		{
+		{	
 			if (f.isStatic())
 				return;
 			

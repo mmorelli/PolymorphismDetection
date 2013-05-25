@@ -4,19 +4,16 @@ import javassist.ClassPool;
 import javassist.NotFoundException;
 
 
-public class DynamicDataContainer 
+public class DynamicDataContainer
 {
 	private static DynamicDataContainer instance = null;
-	
 	private static MultiMap keyValueContainer;
-	private static PackageContainer packageNamesOfClasses;
 	
 	private ClassPool pool;
 	
 	private DynamicDataContainer() 
 	{
 		keyValueContainer = new MultiMap();
-		packageNamesOfClasses = new PackageContainer();
 	}
 
 	public static DynamicDataContainer getInstance() 
@@ -54,27 +51,5 @@ public class DynamicDataContainer
 		}
 		
 		return "noFieldType";
-	}
-	
-	public void addPackageNameOfClass(String absoluteFilePath) 
-	{
-		packageNamesOfClasses.add (absoluteFilePath);
-	}
-	
-	public String getPackageNameOfClass(String className) 
-	{
-		String packageName = packageNamesOfClasses.getPackageNameOfClass (className);
-		
-		return packageName;
-	}	
-	
-	public String getPackagePrefix(String className) 
-	{
-		String packageName = packageNamesOfClasses.getPackageNameOfClass (className);
-		
-		if (packageName.equals("defaultPackage"))
-			return "";
-		else 
-			return packageName +".";
 	}
 }

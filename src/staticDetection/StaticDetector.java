@@ -2,6 +2,7 @@ package staticDetection;
 
 import java.io.File;
 
+import controller.Detector;
 import controller.MultiMap;
 
 import javassist.CannotCompileException;
@@ -10,32 +11,43 @@ import javassist.CtClass;
 import javassist.NotFoundException;
 
 
-public class StaticDetector 
+public class StaticDetector extends Detector 
 {
-	private String absolutPathToBinaryDirectory;
 	private ClassPool pool;
 	
 	public StaticDetector (String absolutPathToBinaryDirectory) throws Throwable
 	{
-		this.absolutPathToBinaryDirectory = absolutPathToBinaryDirectory;
+		super (absolutPathToBinaryDirectory);
+		
 		pool = ClassPool.getDefault();	
 		pool.insertClassPath(absolutPathToBinaryDirectory);
 	}
 
-	public void run() throws NotFoundException, CannotCompileException 
+	public void run() throws CannotCompileException, NotFoundException 
 	{
 		System.out.println("run StaticDetector..");
+
+		try 
+		{
+			pool.appendClassPath(new File("src\\libs\\play-1.2.2.jar").getAbsolutePath());
+			pool.appendClassPath(new File("src\\libs\\junit-4.4.jar").getAbsolutePath());
+			pool.appendClassPath(new File("src\\libs\\netty-3.2.3.jar").getAbsolutePath());
+		} 
+		catch (NotFoundException e) 
+		{
+			System.out.println("### FAILED LOADING NEEDED LIBS ###");
+			e.printStackTrace();
+		}
 		
 		iterateClasses (new File (absolutPathToBinaryDirectory));
 	}
 	
 	
-	private void iterateClasses(File file) throws NotFoundException, CannotCompileException 
+	private void iterateClasses(File file) throws CannotCompileException, NotFoundException 
 	{
 		if (file.getName().endsWith(".class") && file.isFile())
 		{
-			String packageName = getPackageName (file.getAbsolutePath());
-			
+			String packageName = getPackageNameFromPath (file.getAbsolutePath());
 			CtClass ctClass = pool.get(packageName + getNameWithoutExtension(file.getName()));
 			ctClass.instrument (new StaticFieldReader());
 		}
@@ -48,30 +60,6 @@ public class StaticDetector
 		    	iterateClasses(child);
 		    }
 	    }
-
-	}
-	
-	private String getPackageName (String absoluteFilePath)
-	{
-		int posOfLastPathSep = absoluteFilePath.lastIndexOf(System.getProperty("file.separator"));
-		int posOfBinPathEnd = absoluteFilePath.indexOf("bin") + 3;
-		
-		String packageName;
-		if (posOfBinPathEnd != posOfLastPathSep)
-		{
-			packageName = absoluteFilePath.substring(posOfBinPathEnd + 1, posOfLastPathSep);
-			packageName = packageName.replace(System.getProperty("file.separator").charAt(0), '.') + ".";
-		}
-		else
-			packageName = "";
-
-		return packageName;
-	}
-	
-	private String getNameWithoutExtension (String fileName)
-	{
-		int index = fileName.lastIndexOf('.');
-		return fileName.substring(0, index);
 	}
 
 	public MultiMap getResult() 

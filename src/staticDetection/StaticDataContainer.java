@@ -5,7 +5,7 @@ import java.util.Set;
 
 import controller.MultiMap;
 
-public class StaticDataContainer 
+public class StaticDataContainer
 {
 	private static StaticDataContainer instance = null;
 	
