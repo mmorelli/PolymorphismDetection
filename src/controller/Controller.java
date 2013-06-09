@@ -22,9 +22,11 @@ public class Controller
 		
 		// ESE-Projects
 		//
-		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\ESE projects\\ese2011-team2-master\\eclipse\\classes";
+//		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\ESE projects\\ese2011-team2-master\\eclipse\\classes";
 //		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\ESE projects\\ese2010-team3-master\\qa\\eclipse\\classes";
 //		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\ESE projects\\ese2011-team6-master\\eclipse\\classes";
+		
+		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\Apache\\commons-jxpath-1.3-src\\bin";
 		
 	public static void main(String[] args) 
 	{	
@@ -43,18 +45,18 @@ public class Controller
 			DynamicDetector dc = new DynamicDetector (absolutPathToBinaryDirectory);
 
 //			dc.run ("org.argouml.application.Main", args);;
-			dc.run ("play.server.Server", args);
+//			dc.run ("play.server.Server", args);
 //			dc.run ("battleship.game.GameDriver", args);
 //			dc.run ("turtle.TurtleRenderer", args);
 //			dc.run ("snakes.Game", args);
+			dc.run ("MainClass", args);
 			
-			
+			String a = Integer.toString(3);
 			MultiMap dynamicResult = dc.getResult ();
 			
 			System.out.println("***DYNAMIC RESULT***");
 			dynamicResult.printDump();
 			dynamicResult.printPolymorphicFields();
-	
 		} 
 		catch (Throwable e) 
 		{

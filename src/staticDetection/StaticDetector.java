@@ -27,22 +27,11 @@ public class StaticDetector extends Detector
 	{
 		System.out.println("run StaticDetector..");
 
-		try 
-		{
-			pool.appendClassPath(new File("src\\libs\\play-1.2.2.jar").getAbsolutePath());
-			pool.appendClassPath(new File("src\\libs\\junit-4.4.jar").getAbsolutePath());
-			pool.appendClassPath(new File("src\\libs\\netty-3.2.3.jar").getAbsolutePath());
-		} 
-		catch (NotFoundException e) 
-		{
-			System.out.println("### FAILED LOADING NEEDED LIBS ###");
-			e.printStackTrace();
-		}
+		appendLibrariesToPool (pool);
 		
 		iterateClasses (new File (absolutPathToBinaryDirectory));
 	}
-	
-	
+
 	private void iterateClasses(File file) throws CannotCompileException, NotFoundException 
 	{
 		if (file.getName().endsWith(".class") && file.isFile())

@@ -24,7 +24,7 @@ public class StaticFieldReader extends ExprEditor
 				String keyString = f.getClassName() + ":" + f.getField().getType().getName() + ":" + f.getField().getName(); 
 				StaticDataContainer.getInstance().addFieldKey(id, keyString);
 				
-				System.out.println ("writer: "+ id + "-"+ keyString);
+//				System.out.println ("writer: "+ id + "-"+ keyString);
 			}
 			
 			if (f.isReader())
@@ -32,7 +32,7 @@ public class StaticFieldReader extends ExprEditor
 				String valueString = f.getField().getType().getName() + ":" + f.getField().getName(); 
 				StaticDataContainer.getInstance().addFieldValue(id, valueString);
 				
-				System.out.println ("reader: "+ id + "-"+valueString);
+//				System.out.println ("reader: "+ id + "-"+valueString);
 //				System.out.println ("value " + f.getField().getType().getName() + " " + f.getField().getName() + " " + line);
 			}
 			

@@ -49,7 +49,7 @@ public class MultiMap
 
 	public void printDump() 
 	{
-		System.out.println("***Dump of MultiMap:***");
+		System.out.println("***Dump:***");
 		
 		Set<String> set = multiMap.keySet();
 		for (String key : set)

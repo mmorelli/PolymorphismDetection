@@ -1,5 +1,10 @@
 package controller;
 
+import java.io.File;
+
+import javassist.ClassPool;
+import javassist.NotFoundException;
+
 public class Detector 
 {
 	protected String absolutPathToBinaryDirectory;
@@ -40,5 +45,25 @@ public class Detector
 	{
 		int index = fileName.lastIndexOf('.');
 		return fileName.substring(0, index);
+	}
+	
+	protected void appendLibrariesToPool (ClassPool pool) 
+	{
+		try 
+		{
+			pool.appendClassPath(new File("src\\libs\\play-1.2.2.jar").getAbsolutePath());
+			pool.appendClassPath(new File("src\\libs\\junit-4.4.jar").getAbsolutePath());
+			pool.appendClassPath(new File("src\\libs\\netty-3.2.3.jar").getAbsolutePath());
+			
+			pool.appendClassPath(new File("D:\\Bachelorarbeit\\Libs\\javax.jar").getAbsolutePath());
+			pool.appendClassPath(new File("D:\\Bachelorarbeit\\Libs\\apache-commons.jar").getAbsolutePath());
+			pool.appendClassPath(new File("D:\\Bachelorarbeit\\Libs\\jdom-1.1.jar").getAbsolutePath());
+		} 
+		catch (NotFoundException e) 
+		{
+			System.out.println("### FAILED LOADING NEEDED LIBS ###");
+			e.printStackTrace();
+		}
+		
 	}
 }

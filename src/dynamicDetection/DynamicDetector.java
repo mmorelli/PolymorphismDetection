@@ -48,6 +48,8 @@ public class DynamicDetector extends Detector
 		{
 			collectClassNames (new File(absolutPathToBinaryDirectory));
 			
+			appendLibrariesToPool (pool);
+
 			appendPaths();
 			
 			renameDublicatedFieldNames();
@@ -244,16 +246,17 @@ public class DynamicDetector extends Detector
 		return false;
 	}
 	
-	private void runMain(String mainClass, String[] args)
+	private void runMain(String mainClass, String[] args) throws Throwable
 	{
-		try
-		{
+//		try
+//		{
 			classLoader.run(mainClass, args);
-		}
-		catch (Throwable e) 
-		{
-			System.out.println("### ABORTED SIMULATION-RUN! (in dynamicDetector.runMain) ###");
-		}
+			
+//		}
+//		catch (Throwable e) 
+//		{
+//			System.out.println("### ABORTED SIMULATION-RUN! (in dynamicDetector.runMain) ###");
+//		}
 	}
 		
 	public MultiMap getResult() 
