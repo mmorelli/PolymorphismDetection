@@ -3,6 +3,9 @@ package staticDetection;
 import java.util.HashMap;
 import java.util.Set;
 
+import javassist.ClassPool;
+import javassist.NotFoundException;
+
 import controller.MultiMap;
 
 public class StaticDataContainer
@@ -30,7 +33,17 @@ public class StaticDataContainer
 
 	public void addFieldKey(String id, String keyString) 
 	{
-		keys.put(id, keyString);
+		if (!isPrimitiveDataType (keyString))
+			keys.put(id, keyString);
+	}
+
+	// TODO finish it!
+	private boolean isPrimitiveDataType(String keyString) 
+	{
+		return (keyString.contains("int") ||
+				keyString.contains("Integer.") ||
+				keyString.contains("long.") ||
+				keyString.contains("Long"));
 	}
 
 	public void addFieldValue(String id, String valueString) 
@@ -61,8 +74,5 @@ public class StaticDataContainer
 				keyValueContainer.add(theKey, value);
 			}
 		}
-		
 	}
-	
-	
 }

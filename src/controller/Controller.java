@@ -26,7 +26,16 @@ public class Controller
 //		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\ESE projects\\ese2010-team3-master\\qa\\eclipse\\classes";
 //		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\ESE projects\\ese2011-team6-master\\eclipse\\classes";
 		
-		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\Apache\\commons-jxpath-1.3-src\\bin";
+		// Apache JXPath
+		// 
+//		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\Apache\\commons-jxpath-1.3-src\\bin";
+		
+		// Apache Commons
+		// 
+//		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\Apache\\commons-jxpath-1.3-src\\bin";
+		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\Apache\\commons-lang3-3.1-src\\bin";
+		
+		
 		
 	public static void main(String[] args) 
 	{	
@@ -38,8 +47,9 @@ public class Controller
 			MultiMap staticResult = sd.getResult ();
 			
 			System.out.println("***STATIC RESULT***");
-			staticResult.printDump();
-			staticResult.printPolymorphicFields();
+//			staticResult.printDump();
+//			staticResult.printPolymorphicFields();
+			staticResult.writeDumpToFile("staticResult.txt");
 			
 			
 			DynamicDetector dc = new DynamicDetector (absolutPathToBinaryDirectory);
@@ -55,8 +65,9 @@ public class Controller
 			MultiMap dynamicResult = dc.getResult ();
 			
 			System.out.println("***DYNAMIC RESULT***");
-			dynamicResult.printDump();
-			dynamicResult.printPolymorphicFields();
+//			dynamicResult.printDump();
+//			dynamicResult.printPolymorphicFields();
+			dynamicResult.writeDumpToFile("dynamicResult.txt");
 		} 
 		catch (Throwable e) 
 		{

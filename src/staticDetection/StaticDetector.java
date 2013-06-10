@@ -4,6 +4,7 @@ import java.io.File;
 
 import controller.Detector;
 import controller.MultiMap;
+import dynamicDetection.DynamicDataContainer;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -31,10 +32,10 @@ public class StaticDetector extends Detector
 		
 		iterateClasses (new File (absolutPathToBinaryDirectory));
 	}
-
+	
 	private void iterateClasses(File file) throws CannotCompileException, NotFoundException 
 	{
-		if (file.getName().endsWith(".class") && file.isFile())
+		if (file.getName().endsWith(".class") && file.isFile() && ! file.getName().contains("Test")) // ignore Unittest class-files!
 		{
 			String packageName = getPackageNameFromPath (file.getAbsolutePath());
 			CtClass ctClass = pool.get(packageName + getNameWithoutExtension(file.getName()));

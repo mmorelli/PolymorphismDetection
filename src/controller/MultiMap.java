@@ -1,4 +1,7 @@
 package controller;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -64,6 +67,55 @@ public class MultiMap
 		
 		System.out.println("***Dump end***");
 		
+	}
+	
+	public void writeDumpToFile(String filename) 
+	{
+		try 
+		{
+			PrintWriter writer = new PrintWriter (filename, "UTF-8");
+			
+			writer.println("***Dump:***");
+			
+			Set<String> set = multiMap.keySet();
+			for (String key : set)
+			{
+				writer.println("KEY: " + key);
+				ArrayList<String> values = multiMap.get(key);
+				for (String value : values)
+				{
+					writer.println(" VALUE(S): " + value);
+				}
+			}
+			
+			writer.println("***Dump end***");
+			
+			writer.println("***Polymorphic Fields:***");
+			
+			set = multiMap.keySet();
+			for (String key : set)
+			{
+				if (getValueCount (key) > 1)
+					writer.println(key);
+			}
+			
+			writer.println("***Polymorphic Fields end***");
+			
+			writer.close();
+		} 
+		catch (FileNotFoundException e) 
+		{
+			System.out.println("FileNotFound!");
+		} 
+		catch (UnsupportedEncodingException e) 
+		{
+			System.out.println("UnsupportedEncoding!");
+		}
+	}
+	
+	public void writePolymorphicFieldsToFile ()
+	{
+
 	}
 
 	// This method returns a Multimap with the fieldnames wich are twice or more seen

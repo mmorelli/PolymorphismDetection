@@ -55,6 +55,8 @@ public class Detector
 			pool.appendClassPath(new File("src\\libs\\junit-4.4.jar").getAbsolutePath());
 			pool.appendClassPath(new File("src\\libs\\netty-3.2.3.jar").getAbsolutePath());
 			
+			// TODO noch in richtiges dir
+			//
 			pool.appendClassPath(new File("D:\\Bachelorarbeit\\Libs\\javax.jar").getAbsolutePath());
 			pool.appendClassPath(new File("D:\\Bachelorarbeit\\Libs\\apache-commons.jar").getAbsolutePath());
 			pool.appendClassPath(new File("D:\\Bachelorarbeit\\Libs\\jdom-1.1.jar").getAbsolutePath());
