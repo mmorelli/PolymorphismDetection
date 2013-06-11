@@ -51,9 +51,10 @@ public class Detector
 	{
 		try 
 		{
-			pool.appendClassPath(new File("src\\libs\\play-1.2.2.jar").getAbsolutePath());
-			pool.appendClassPath(new File("src\\libs\\junit-4.4.jar").getAbsolutePath());
-			pool.appendClassPath(new File("src\\libs\\netty-3.2.3.jar").getAbsolutePath());
+			// TODO make mac compatibel (pathseperator from system.properties)
+//			pool.appendClassPath(new File("src\\libs\\play-1.2.2.jar").getAbsolutePath());
+//			pool.appendClassPath(new File("src\\libs\\junit-4.4.jar").getAbsolutePath());
+//			pool.appendClassPath(new File("src\\libs\\netty-3.2.3.jar").getAbsolutePath());
 			
 			// TODO noch in richtiges dir
 			//

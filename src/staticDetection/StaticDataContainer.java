@@ -33,17 +33,7 @@ public class StaticDataContainer
 
 	public void addFieldKey(String id, String keyString) 
 	{
-		if (!isPrimitiveDataType (keyString))
 			keys.put(id, keyString);
-	}
-
-	// TODO finish it!
-	private boolean isPrimitiveDataType(String keyString) 
-	{
-		return (keyString.contains("int") ||
-				keyString.contains("Integer.") ||
-				keyString.contains("long.") ||
-				keyString.contains("Long"));
 	}
 
 	public void addFieldValue(String id, String valueString) 

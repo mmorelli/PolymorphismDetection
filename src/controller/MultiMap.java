@@ -31,10 +31,29 @@ public class MultiMap
 		}
 	}
 	
-	private int getValueCount (String key)
+	public int getValueCountOfKey (String key)
 	{
-		return multiMap.get(key).size();		
+		if (multiMap.containsKey(key))
+			return multiMap.get(key).size();
+		else
+			return 0;
 	}
+	
+	// TODO finish it!
+//	public boolean eliminatePrimitiveDataTypes () 
+//	{
+//		Set<String> set = multiMap.keySet();
+//		for (String key : set)
+//		{
+//			if (isPrimitveDataType (key))
+//				set.
+//		}
+//		
+//		return (keyString.contains("int") ||
+//				keyString.contains("char") ||
+//				keyString.contains("long") ||
+//				keyString.contains("Long"));
+//	}
 	
 	public void printPolymorphicFields ()
 	{
@@ -43,7 +62,7 @@ public class MultiMap
 		Set<String> set = multiMap.keySet();
 		for (String key : set)
 		{
-			if (getValueCount (key) > 1)
+			if (getValueCountOfKey (key) > 1)
 				System.out.println(key);
 		}
 		
@@ -95,7 +114,7 @@ public class MultiMap
 			set = multiMap.keySet();
 			for (String key : set)
 			{
-				if (getValueCount (key) > 1)
+				if (getValueCountOfKey (key) > 1)
 					writer.println(key);
 			}
 			
@@ -113,14 +132,10 @@ public class MultiMap
 		}
 	}
 	
-	public void writePolymorphicFieldsToFile ()
-	{
 
-	}
-
-	// This method returns a Multimap with the fieldnames wich are twice or more seen
+	// Returns over all ClassNames (Key) the fileNames (values) which are duplicated
 	//
-	public HashMap<String, String> getDublicates() 
+	public HashMap<String/*ClassName*/, String/*FieldName*/> getDuplicatedFieldNames() 
 	{
 		HashMap<String, String> dublicates = new HashMap<String, String> ();
 		
@@ -130,9 +145,9 @@ public class MultiMap
 			ArrayList<String> values = multiMap.get(key);
 			for (String value : values)
 			{
-				System.out.println(key +  " " + value);
+//				System.out.println(key +  " " + value);
 				
-				if (containsValueMoreThanOneTime(value))
+				if (containsValueMoreThanOnce(value))
 					dublicates.put(key, value);
 			}
 		}
@@ -140,7 +155,7 @@ public class MultiMap
 		return dublicates; 
 	}
 
-	private boolean containsValueMoreThanOneTime(String value) 
+	private boolean containsValueMoreThanOnce(String value) 
 	{
 		int valueCount = 0;
 		
@@ -158,11 +173,9 @@ public class MultiMap
 						return true;
 				}
 			}
-		}
-		
+		}	
 		return false;
 	}
-
 }
 
 

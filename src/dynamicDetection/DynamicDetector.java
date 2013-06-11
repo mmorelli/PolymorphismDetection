@@ -128,7 +128,7 @@ public class DynamicDetector extends Detector
 	private HashMap<String, String> getDublicatedFieldNames(MultiMap fieldNames) 
 	{
 		HashMap<String, String> dublicateFieldNames = new HashMap<String, String>();
-		dublicateFieldNames = fieldNames.getDublicates ();
+		dublicateFieldNames = fieldNames.getDuplicatedFieldNames ();
 		
 		return dublicateFieldNames;
 	}

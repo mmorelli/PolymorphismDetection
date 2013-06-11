@@ -35,7 +35,7 @@ public class StaticDetector extends Detector
 	
 	private void iterateClasses(File file) throws CannotCompileException, NotFoundException 
 	{
-		if (file.getName().endsWith(".class") && file.isFile() && ! file.getName().contains("Test")) // ignore Unittest class-files!
+		if (file.getName().endsWith(".class") && file.isFile() /*&& ! file.getName().contains("Test")*/) // ignore Unittest class-files!
 		{
 			String packageName = getPackageNameFromPath (file.getAbsolutePath());
 			CtClass ctClass = pool.get(packageName + getNameWithoutExtension(file.getName()));
