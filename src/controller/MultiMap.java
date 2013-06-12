@@ -39,22 +39,6 @@ public class MultiMap
 			return 0;
 	}
 	
-	// TODO finish it!
-//	public boolean eliminatePrimitiveDataTypes () 
-//	{
-//		Set<String> set = multiMap.keySet();
-//		for (String key : set)
-//		{
-//			if (isPrimitveDataType (key))
-//				set.
-//		}
-//		
-//		return (keyString.contains("int") ||
-//				keyString.contains("char") ||
-//				keyString.contains("long") ||
-//				keyString.contains("Long"));
-//	}
-	
 	public void printPolymorphicFields ()
 	{
 		System.out.println("***Polymorphic Fields:***");

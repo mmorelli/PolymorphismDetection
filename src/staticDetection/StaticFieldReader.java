@@ -5,16 +5,11 @@ import javassist.expr.FieldAccess;
 
 public class StaticFieldReader extends ExprEditor 
 {
-	public StaticFieldReader() 
-	{
-
-	}
-
 	public void edit (FieldAccess f)
 	{
 		try 
 		{	
-			if (f.isStatic())
+			if (f.isStatic() || f.getField().getType().isPrimitive()) // HEURISTICS: Ignore primitive Datatypes
 				return;
 			
 			String id = f.getClassName() + "AtLine:" + f.getLineNumber();
@@ -29,13 +24,12 @@ public class StaticFieldReader extends ExprEditor
 			
 			if (f.isReader())
 			{
-				String valueString = f.getField().getType().getName() + ":" + f.getField().getName(); 
+				String valueString = f.getField().getType().getName() + ":" + f.getField().getName();
 				StaticDataContainer.getInstance().addFieldValue(id, valueString);
 				
 //				System.out.println ("reader: "+ id + "-"+valueString);
 //				System.out.println ("value " + f.getField().getType().getName() + " " + f.getField().getName() + " " + line);
 			}
-			
 		} 
 		catch (NotFoundException e) 
 		{

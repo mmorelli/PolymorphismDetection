@@ -12,9 +12,9 @@ public class Detector
 	protected String absolutePathToRootDirectory;
 	private String rootDirectoryName;
 	
-	public Detector (String absolutPathToBinaryDirectory)
+	public Detector (String absolutePathToRootDirectory)
 	{
-		this.absolutePathToRootDirectory = absolutPathToBinaryDirectory;
+		this.absolutePathToRootDirectory = absolutePathToRootDirectory;
 		this.rootDirectoryName = extractSourceDirName ();
 	}
 	
@@ -28,13 +28,13 @@ public class Detector
 
 	protected String getPackageNameFromPath (String absoluteFilePath)
 	{
-		int posOfLastPathSep = absoluteFilePath.lastIndexOf(pathDelimiter);
-		int posOfBinPathEnd = absoluteFilePath.indexOf(rootDirectoryName) + rootDirectoryName.length();
+		int lastPathDelimiterIdx = absoluteFilePath.lastIndexOf(pathDelimiter);
+		int posRootDirPathEnd = absoluteFilePath.indexOf(rootDirectoryName) + rootDirectoryName.length();
 		
 		String packageName;
-		if (posOfBinPathEnd != posOfLastPathSep)
+		if (posRootDirPathEnd != lastPathDelimiterIdx)
 		{
-			packageName = absoluteFilePath.substring(posOfBinPathEnd + 1, posOfLastPathSep);
+			packageName = absoluteFilePath.substring(posRootDirPathEnd + 1, lastPathDelimiterIdx);
 			packageName = packageName.replace(pathDelimiter, '.') + ".";
 		}
 		else

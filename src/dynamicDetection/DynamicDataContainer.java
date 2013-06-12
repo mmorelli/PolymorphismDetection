@@ -52,4 +52,18 @@ public class DynamicDataContainer
 		
 		return "noFieldType";
 	}
+	
+	public boolean isFieldTypePrimitve (String className, String fieldname)
+	{
+		try 
+		{
+			return pool.get(className).getField(fieldname).getType().isPrimitive();		
+		} 
+		catch (NotFoundException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
 }

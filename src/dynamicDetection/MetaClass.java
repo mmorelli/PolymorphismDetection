@@ -20,14 +20,16 @@ public class MetaClass extends Metaobject
     }
 
     public void trapFieldWrite(String name, Object value) 
-    {
+    {	
     	if (value != null)
     	{	
     		String type = DynamicDataContainer.getInstance().getFieldType(getClassMetaobject().getName(), name);
 
-    		DynamicDataContainer.getInstance().addFieldWriteTrap(getClassMetaobject().getName() + ":" 
+    		// HEURISTICS: Ignore primitive Datatypes
+    		//
+    		if (!DynamicDataContainer.getInstance().isFieldTypePrimitve(getClassMetaobject().getName(), name))
+    			DynamicDataContainer.getInstance().addFieldWriteTrap(getClassMetaobject().getName() + ":" 
 																+ type + "." + name  , value.getClass().getName());
-    		
     	}
     	
         super.trapFieldWrite(name, value);
