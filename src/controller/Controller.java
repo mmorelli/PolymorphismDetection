@@ -32,8 +32,9 @@ public class Controller
 		
 		// Apache Commons
 		// 
-		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\Apache\\commons-jxpath-1.3-src\\bin";
-//		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\Apache\\commons-lang3-3.1-src\\bin";
+//		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\Apache\\commons-jxpath-1.3-src\\bin";
+		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\Apache\\commons-lang3-3.1-src\\bin";
+//		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\Apache\\commons-collections-3.2.1-src\\bin";
 		
 		
 		
@@ -61,7 +62,6 @@ public class Controller
 //			dc.run ("snakes.Game", args);
 			dc.run ("MainClass", args);
 			
-			String a = Integer.toString(3);
 			MultiMap dynamicResult = dc.getResult ();
 			
 			System.out.println("***DYNAMIC RESULT***");

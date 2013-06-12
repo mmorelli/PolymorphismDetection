@@ -30,5 +30,4 @@ public class FieldNameCollector extends ExprEditor
 			e.printStackTrace();
 		}
 	}
-
 }

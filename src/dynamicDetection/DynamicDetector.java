@@ -46,7 +46,7 @@ public class DynamicDetector extends Detector
 	{
 		try 
 		{
-			collectClassNames (new File(absolutPathToBinaryDirectory));
+			collectClassNames (new File(absolutePathToRootDirectory));
 			
 			appendLibrariesToPool (pool);
 
@@ -70,7 +70,6 @@ public class DynamicDetector extends Detector
 		{
 			e.printStackTrace();
 		}
-		
 	}
 	
 	private void collectClassNames(File file) 
@@ -80,7 +79,7 @@ public class DynamicDetector extends Detector
 			String packageName = getPackageNameFromPath (file.getAbsolutePath());
 			classNames.add(new ClassPoolEntity (packageName + file.getName()));
 			
-			String absoluteDirPath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(System.getProperty("file.separator")));
+			String absoluteDirPath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(pathDelimiter));
 			addPath (absoluteDirPath);
 		}
 		else if (file.getName().endsWith(".jar") && file.isFile())
@@ -180,7 +179,6 @@ public class DynamicDetector extends Detector
 		
 		System.out.println ("****madereflective: " + DEBUG_COUNTER_MADE_REFLECTIVE + " files");
 	}
-
 	
 	private boolean allClassesLoaded() throws Throwable 
 	{
@@ -221,8 +219,6 @@ public class DynamicDetector extends Detector
 		}
 	}
 		
-	
-
 	private boolean parentClassIsLoaded(CtClass ctClass) throws NotFoundException 
 	{
 		String parentClassName = ctClass.getSuperclass().getName() + ".class";
@@ -248,15 +244,7 @@ public class DynamicDetector extends Detector
 	
 	private void runMain(String mainClass, String[] args) throws Throwable
 	{
-//		try
-//		{
-			classLoader.run(mainClass, args);
-			
-//		}
-//		catch (Throwable e) 
-//		{
-//			System.out.println("### ABORTED SIMULATION-RUN! (in dynamicDetector.runMain) ###");
-//		}
+		classLoader.run(mainClass, args);
 	}
 		
 	public MultiMap getResult() 

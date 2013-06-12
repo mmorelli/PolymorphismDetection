@@ -30,7 +30,7 @@ public class StaticDetector extends Detector
 
 		appendLibrariesToPool (pool);
 		
-		iterateClasses (new File (absolutPathToBinaryDirectory));
+		iterateClasses (new File (absolutePathToRootDirectory));
 	}
 	
 	private void iterateClasses(File file) throws CannotCompileException, NotFoundException 

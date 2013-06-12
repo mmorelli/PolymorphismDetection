@@ -176,6 +176,13 @@ public class MultiMap
 		}	
 		return false;
 	}
+	
+	// For unitTests only
+	//
+	public HashMap<String, ArrayList<String>> getMultiMap ()
+	{
+		return multiMap;
+	}
 }
 
 

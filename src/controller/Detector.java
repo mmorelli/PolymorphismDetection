@@ -7,33 +7,35 @@ import javassist.NotFoundException;
 
 public class Detector 
 {
-	protected String absolutPathToBinaryDirectory;
-	private String sourceRootDirectoryName;
+	protected final char pathDelimiter = System.getProperty("file.separator").charAt(0);
+	
+	protected String absolutePathToRootDirectory;
+	private String rootDirectoryName;
 	
 	public Detector (String absolutPathToBinaryDirectory)
 	{
-		this.absolutPathToBinaryDirectory = absolutPathToBinaryDirectory;
-		this.sourceRootDirectoryName = extractSourceDirName ();
+		this.absolutePathToRootDirectory = absolutPathToBinaryDirectory;
+		this.rootDirectoryName = extractSourceDirName ();
 	}
 	
 	private String extractSourceDirName() 
 	{
-		int lastPathDelimiterIdx = absolutPathToBinaryDirectory.lastIndexOf(System.getProperty("file.separator").charAt(0));
-		String dirName = absolutPathToBinaryDirectory.substring(lastPathDelimiterIdx + 1); 
+		int lastPathDelimiterIdx = absolutePathToRootDirectory.lastIndexOf(pathDelimiter);
+		String rootDirName = absolutePathToRootDirectory.substring(lastPathDelimiterIdx + 1); 
 		
-		return dirName;
+		return rootDirName;
 	}
 
 	protected String getPackageNameFromPath (String absoluteFilePath)
 	{
-		int posOfLastPathSep = absoluteFilePath.lastIndexOf(System.getProperty("file.separator"));
-		int posOfBinPathEnd = absoluteFilePath.indexOf(sourceRootDirectoryName) + sourceRootDirectoryName.length();
+		int posOfLastPathSep = absoluteFilePath.lastIndexOf(pathDelimiter);
+		int posOfBinPathEnd = absoluteFilePath.indexOf(rootDirectoryName) + rootDirectoryName.length();
 		
 		String packageName;
 		if (posOfBinPathEnd != posOfLastPathSep)
 		{
 			packageName = absoluteFilePath.substring(posOfBinPathEnd + 1, posOfLastPathSep);
-			packageName = packageName.replace(System.getProperty("file.separator").charAt(0), '.') + ".";
+			packageName = packageName.replace(pathDelimiter, '.') + ".";
 		}
 		else
 			packageName = "";
@@ -51,20 +53,19 @@ public class Detector
 	{
 		try 
 		{
-			// TODO make mac compatibel (pathseperator from system.properties)
-//			pool.appendClassPath(new File("src\\libs\\play-1.2.2.jar").getAbsolutePath());
-//			pool.appendClassPath(new File("src\\libs\\junit-4.4.jar").getAbsolutePath());
-//			pool.appendClassPath(new File("src\\libs\\netty-3.2.3.jar").getAbsolutePath());
-			
-			// TODO noch in richtiges dir
-			//
-			pool.appendClassPath(new File("D:\\Bachelorarbeit\\Libs\\javax.jar").getAbsolutePath());
-			pool.appendClassPath(new File("D:\\Bachelorarbeit\\Libs\\apache-commons.jar").getAbsolutePath());
-			pool.appendClassPath(new File("D:\\Bachelorarbeit\\Libs\\jdom-1.1.jar").getAbsolutePath());
+			File libsDirectory = new File("src" + pathDelimiter + "libs");
+			if (libsDirectory.isDirectory())
+			{
+			    File[] children = libsDirectory.listFiles();
+			    for (File child : children) 
+			    {
+			    	pool.appendClassPath(child.getAbsolutePath());
+			    }
+		    }
 		} 
 		catch (NotFoundException e) 
 		{
-			System.out.println("### FAILED LOADING NEEDED LIBS ###");
+			System.out.println("### FAILED LOADING LIBS FROM DIR: src\\libs ###");
 			e.printStackTrace();
 		}
 		
