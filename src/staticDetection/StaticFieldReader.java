@@ -14,7 +14,7 @@ public class StaticFieldReader extends ExprEditor
 			
 			String id = f.getClassName() + "AtLine:" + f.getLineNumber();
 			
-			if (f.isWriter() )
+			if (f.isWriter())
 			{
 				String keyString = f.getClassName() + ":" + f.getField().getType().getName() + ":" + f.getField().getName(); 
 				StaticDataContainer.getInstance().addFieldKey(id, keyString);
@@ -24,7 +24,7 @@ public class StaticFieldReader extends ExprEditor
 			
 			if (f.isReader())
 			{
-				String valueString = f.getField().getType().getName() + ":" + f.getField().getName();
+				String valueString = f.getField().getType().getName(); //+ ":" + f.getField().getName();
 				StaticDataContainer.getInstance().addFieldValue(id, valueString);
 				
 //				System.out.println ("reader: "+ id + "-"+valueString);

@@ -29,7 +29,8 @@ public class MetaClass extends Metaobject
     		//
     		if (!DynamicDataContainer.getInstance().isFieldTypePrimitve(getClassMetaobject().getName(), name))
     			DynamicDataContainer.getInstance().addFieldWriteTrap(getClassMetaobject().getName() + ":" 
-																+ type + "." + name  , value.getClass().getName());
+																+ type + ":" + name  , value.getClass().getName());
+   
     	}
     	
         super.trapFieldWrite(name, value);
