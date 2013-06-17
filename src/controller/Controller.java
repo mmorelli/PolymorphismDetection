@@ -34,7 +34,9 @@ public class Controller
 		// 
 //		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\Apache\\commons-jxpath-1.3-src\\bin";
 //		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\Apache\\commons-lang3-3.1-src\\bin";
-		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\Apache\\commons-collections-3.2.1-src\\bin";
+//		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\Apache\\commons-collections-3.2.1-src\\bin";
+		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\Apache\\commons-codec-1.8-src\\bin";
+//		private final static String absolutPathToBinaryDirectory = "D:\\Bachelorarbeit\\source-files\\Apache\\commons-io-2.4-src\\bin";
 		
 		
 		

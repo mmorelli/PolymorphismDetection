@@ -20,7 +20,7 @@ public class MultiMapTests
 	}
 	
 	@Test
-	public void add1()
+	public void addTest1()
 	{
 		map.add("A", "a");
 		map.add("A", "a");
@@ -34,7 +34,7 @@ public class MultiMapTests
 	}
 	
 	@Test
-	public void add2()
+	public void addTest2()
 	{
 		map.add("A", "a");
 		map.add("A", "a");
@@ -51,7 +51,7 @@ public class MultiMapTests
 	}
 	
 	@Test
-	public void getDuplicatedValues1()
+	public void getDuplicatedValuesTest1()
 	{
 		map.add("A", "a");
 		map.add("B", "a");
@@ -66,7 +66,7 @@ public class MultiMapTests
 	}
 	
 	@Test
-	public void getDuplicatedValues2()
+	public void getDuplicatedValuesTest2()
 	{
 		map.add("B", "a");
 		map.add("B", "a");
@@ -80,7 +80,7 @@ public class MultiMapTests
 	}
 	
 	@Test
-	public void getDuplicatedValues3()
+	public void getDuplicatedValuesTest3()
 	{
 		map.add("A", "a");
 		map.add("B", "a");
@@ -98,7 +98,7 @@ public class MultiMapTests
 	}
 	
 	@Test
-	public void getDuplicatedValues4()
+	public void getDuplicatedValuesTest4()
 	{
 		map.add("A", "a");
 		map.add("B", "b");
@@ -114,6 +114,4 @@ public class MultiMapTests
 	    assertTrue (keys.contains("C"));
 	    assertFalse (keys.contains("D"));
 	}
-	
-	
 }
