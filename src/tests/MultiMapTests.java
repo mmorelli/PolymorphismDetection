@@ -2,12 +2,11 @@ package tests;
 
 import static org.junit.Assert.*;
 
-import java.util.HashMap;
-import java.util.Set;
-
+import java.util.ArrayList;
 import org.junit.*;
 
 import controller.MultiMap;
+import dynamicDetection.ClassFieldMap;
 
 public class MultiMapTests 
 {
@@ -56,13 +55,12 @@ public class MultiMapTests
 		map.add("A", "a");
 		map.add("B", "a");
 		
-		HashMap<String, String> dublicates = map.getDuplicatedFieldNames();
-		Set<String> keys = dublicates.keySet();
+		ArrayList<ClassFieldMap> dublicates = map.getDuplicates();
 		
-	    assertTrue (keys.size() == 2);
-	    assertTrue (keys.contains("A"));
-	    assertTrue (keys.contains("B"));
-	    assertFalse (keys.contains("C"));
+	    assertTrue (dublicates.size() == 1);
+	    assertTrue (dublicates.get(0).getClassName().equals("B"));
+	    assertTrue (dublicates.get(0).getFields().size() == 1);
+	    assertTrue (dublicates.get(0).getFields().get(0).equals("a"));
 	}
 	
 	@Test
@@ -71,12 +69,11 @@ public class MultiMapTests
 		map.add("B", "a");
 		map.add("B", "a");
 		
-		HashMap<String, String> dublicates = map.getDuplicatedFieldNames();
-		Set<String> keys = dublicates.keySet();
+		ArrayList<ClassFieldMap> dublicates = map.getDuplicates();
 		
-	    assertTrue (keys.size() == 0);
-	    assertFalse (keys.contains("B"));
-	    assertFalse (keys.contains("C"));
+	    assertTrue (dublicates.size() == 0);
+	    assertFalse (dublicates.contains("B"));
+	    assertFalse (dublicates.contains("C"));
 	}
 	
 	@Test
@@ -87,14 +84,15 @@ public class MultiMapTests
 		map.add("C", "a");
 		map.add("D", "d");
 		
-		HashMap<String, String> dublicates = map.getDuplicatedFieldNames();
-		Set<String> keys = dublicates.keySet();
+		ArrayList<ClassFieldMap> dublicates = map.getDuplicates();
 		
-	    assertTrue (keys.size() == 3);
-	    assertTrue (keys.contains("A"));
-	    assertTrue (keys.contains("B"));
-	    assertTrue (keys.contains("C"));
-	    assertFalse (keys.contains("D"));
+	    assertTrue (dublicates.size() == 2);
+	    assertTrue (dublicates.get(0).getClassName().equals("B"));
+	    assertTrue (dublicates.get(0).getFields().size() == 1);
+	    assertTrue (dublicates.get(0).getFields().get(0).equals("a"));
+	    assertTrue (dublicates.get(1).getClassName().equals("C"));
+	    assertTrue (dublicates.get(1).getFields().size() == 1);
+	    assertTrue (dublicates.get(1).getFields().get(0).equals("a"));
 	}
 	
 	@Test
@@ -103,15 +101,29 @@ public class MultiMapTests
 		map.add("A", "a");
 		map.add("B", "b");
 		map.add("C", "a");
+		map.add("D", "b");
+		
+		ArrayList<ClassFieldMap> dublicates = map.getDuplicates();
+		
+	    assertTrue (dublicates.size() == 2);
+	    assertTrue (dublicates.get(0).getClassName().equals("B"));
+	    assertTrue (dublicates.get(0).getFields().size() == 1);
+	    assertTrue (dublicates.get(0).getFields().get(0).equals("b"));
+	    assertTrue (dublicates.get(1).getClassName().equals("C"));
+	    assertTrue (dublicates.get(1).getFields().size() == 1);
+	    assertTrue (dublicates.get(1).getFields().get(0).equals("a"));
+	}
+	
+	@Test
+	public void getDuplicatedValuesTest5()
+	{
+		map.add("A", "a");
+		map.add("A", "a");
+		map.add("C", "c");
 		map.add("D", "d");
 		
-		HashMap<String, String> dublicates = map.getDuplicatedFieldNames();
-		Set<String> keys = dublicates.keySet();
+		ArrayList<ClassFieldMap> dublicates = map.getDuplicates();
 		
-	    assertTrue (keys.size() == 2);
-	    assertTrue (keys.contains("A"));
-	    assertFalse (keys.contains("B"));
-	    assertTrue (keys.contains("C"));
-	    assertFalse (keys.contains("D"));
+	    assertTrue (dublicates.size() == 0);
 	}
 }

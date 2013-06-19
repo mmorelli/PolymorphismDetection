@@ -2,10 +2,6 @@ package staticDetection;
 
 import java.util.HashMap;
 import java.util.Set;
-
-import javassist.ClassPool;
-import javassist.NotFoundException;
-
 import controller.MultiMap;
 
 public class StaticDataContainer

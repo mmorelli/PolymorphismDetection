@@ -18,7 +18,7 @@ public class FieldNameCollector extends ExprEditor
 	public void edit (FieldAccess f)
 	{
 		try 
-		{	
+		{
 			String fieldName = f.getField().getName();
 			String className = f.getField().getDeclaringClass().getName();
 			

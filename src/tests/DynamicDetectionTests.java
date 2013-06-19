@@ -60,4 +60,5 @@ public class DynamicDetectionTests
 		assertTrue(hm.get("MainClass:Interface:I").contains("A"));
 		assertTrue(hm.get("MainClass:Interface:I").contains("B"));
 	}
+		
 }

@@ -4,7 +4,6 @@ import java.io.File;
 
 import controller.Detector;
 import controller.MultiMap;
-import dynamicDetection.DynamicDataContainer;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;

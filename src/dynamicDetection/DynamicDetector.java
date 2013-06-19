@@ -2,8 +2,6 @@ package dynamicDetection;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
 
 import controller.Detector;
 import controller.MultiMap;
@@ -52,7 +50,7 @@ public class DynamicDetector extends Detector
 
 			appendPaths();
 			
-			renameDublicatedFieldNames();
+			detectDublicatedFieldNames();
 			setFieldModifiersToPublic ();
 			
 			loadInterfaces();
@@ -70,6 +68,7 @@ public class DynamicDetector extends Detector
 		{
 			e.printStackTrace();
 		}
+	
 	}
 	
 	private void collectClassNames(File file) 
@@ -95,7 +94,6 @@ public class DynamicDetector extends Detector
 		    	collectClassNames(child);
 		    }
 	    }
-
 	}
 	
 	private void addPath(String absoluteDirPath) 
@@ -110,38 +108,21 @@ public class DynamicDetector extends Detector
 			pool.appendPathList(path);
 	}
 	
-	private void renameDublicatedFieldNames() throws Throwable 
+	private void detectDublicatedFieldNames() throws Throwable 
 	{
 		MultiMap fieldNames = new MultiMap();
 		for (ClassPoolEntity entity : this.classNames)
 		{
 			CtClass cc = pool.get(getNameWithoutExtension(entity.getClassName()));
-			cc.instrument (new FieldNameCollector(cc.getName(), fieldNames));	
+			cc.instrument (new FieldNameCollector(cc.getName(), fieldNames));
 		}
 		
-		HashMap<String, String> dublicates = getDublicatedFieldNames (fieldNames);
+		ArrayList<ClassFieldMap> duplicatedFieldNames = fieldNames.getDuplicates ();
+		if (!duplicatedFieldNames.isEmpty())
+			System.out.println ("***WARNING*** Duplicated field names detected!");
 		
-		renameDublicates (dublicates);
 	}
 	
-	private HashMap<String, String> getDublicatedFieldNames(MultiMap fieldNames) 
-	{
-		HashMap<String, String> dublicateFieldNames = new HashMap<String, String>();
-		dublicateFieldNames = fieldNames.getDuplicatedFieldNames ();
-		
-		return dublicateFieldNames;
-	}
-	
-	private void renameDublicates(HashMap<String, String> dublicates) throws Throwable 
-	{
-		Set<String> set = dublicates.keySet();
-		for (String key : set)
-		{
-			CtClass cc = pool.get(key);	
-			cc.instrument (new FieldNameRewriter(dublicates.get(key)));
-		}
-	}
-
 	private void setFieldModifiersToPublic() throws Throwable 
 	{
 		for (ClassPoolEntity entity : this.classNames)

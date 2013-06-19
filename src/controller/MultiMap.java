@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import dynamicDetection.ClassFieldMap;
 
 public class MultiMap 
 {
@@ -116,51 +117,27 @@ public class MultiMap
 		}
 	}
 	
-
-	// Returns over all ClassNames (Key) the fileNames (values) which are duplicated
-	//
-	public HashMap<String/*ClassName*/, String/*FieldName*/> getDuplicatedFieldNames() 
+	public ArrayList<ClassFieldMap> getDuplicates() 
 	{
-		HashMap<String, String> dublicates = new HashMap<String, String> ();
+		ArrayList<String> names = new ArrayList<String>();
+		ArrayList<ClassFieldMap> dublicates = new ArrayList<ClassFieldMap>();
 		
 		Set<String> set = multiMap.keySet();
-		for (String key : set)
+		for (String className : set)
 		{
-			ArrayList<String> values = multiMap.get(key);
-			for (String value : values)
-			{
-//				System.out.println(key +  " " + value);
-				
-				if (containsValueMoreThanOnce(value))
-					dublicates.put(key, value);
-			}
-		}
-		
-		return dublicates; 
-	}
-
-	private boolean containsValueMoreThanOnce(String value) 
-	{
-		int valueCount = 0;
-		
-		Set<String> set = multiMap.keySet();
-		for (String key : set)
-		{
-			ArrayList<String> values = multiMap.get(key);
+			ArrayList<String> values = multiMap.get(className);
 			for (String valueOfMultiMap : values)
 			{
-				if (valueOfMultiMap.equals(value))
-				{
-					valueCount++;
-					
-					if (valueCount > 1)
-						return true;
-				}
+				if (names.contains(valueOfMultiMap))
+					dublicates.add(new ClassFieldMap(className, valueOfMultiMap));
+				else	
+					names.add(valueOfMultiMap);
 			}
-		}	
-		return false;
-	}
+		}
 	
+		return dublicates;
+	}
+
 	// For unitTests only
 	//
 	public HashMap<String, ArrayList<String>> getMultiMap ()
