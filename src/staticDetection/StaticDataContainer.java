@@ -9,14 +9,14 @@ public class StaticDataContainer
 	private static StaticDataContainer instance = null;
 	
 	private static MultiMap keyValueContainer;
-	private static HashMap <String, String> keys;
-	private static HashMap <String, String> values;
+	private static HashMap <String, String> writeAccesses;
+	private static HashMap <String, String> readAccesses;
 	
 	private StaticDataContainer() 
 	{
 		keyValueContainer = new MultiMap();
-		keys = new HashMap <String, String>();
-		values = new HashMap <String, String>();
+		writeAccesses = new HashMap <String, String>();
+		readAccesses = new HashMap <String, String>();
 	}
 
 	public static StaticDataContainer getInstance() 
@@ -29,12 +29,12 @@ public class StaticDataContainer
 
 	public void addFieldKey(String id, String keyString) 
 	{
-			keys.put(id, keyString);
+			writeAccesses.put(id, keyString);
 	}
 
 	public void addFieldValue(String id, String valueString) 
 	{
-		values.put(id, valueString);
+		readAccesses.put(id, valueString);
 	}
 
 	public MultiMap getMultiMap() 
@@ -49,13 +49,13 @@ public class StaticDataContainer
 	//
 	private void mergeKeyAndValues() 
 	{
-		Set<String> set = keys.keySet();
+		Set<String> set = writeAccesses.keySet();
 		for (String key : set)
 		{
-			if (values.containsKey(key))
+			if (readAccesses.containsKey(key))
 			{
-				String theKey = keys.get(key);
-				String value = values.get(key);
+				String theKey = writeAccesses.get(key);
+				String value = readAccesses.get(key);
 				
 				keyValueContainer.add(theKey, value);
 			}
