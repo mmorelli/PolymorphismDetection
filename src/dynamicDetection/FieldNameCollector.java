@@ -22,7 +22,7 @@ public class FieldNameCollector extends ExprEditor
 			String fieldName = f.getField().getName();
 			String className = f.getField().getDeclaringClass().getName();
 			
-			if (this.className.equals(className) && !f.isStatic())
+			if (this.className.equals(className) && !f.isStatic() && !fieldName.contains("$"))
 				collector.add(className, fieldName);
 		} 
 		catch (NotFoundException e) 

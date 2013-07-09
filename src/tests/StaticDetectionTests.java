@@ -47,6 +47,10 @@ public class StaticDetectionTests
 		assertTrue(hm.get("MainClass:Interface:I").size() == 2);
 		assertTrue(hm.get("MainClass:Interface:I").contains("A"));
 		assertTrue(hm.get("MainClass:Interface:I").contains("B"));
+		
+		assertTrue(hm.containsKey("MainClass:A:classA"));
+		assertTrue(hm.get("MainClass:A:classA").size() == 1);
+		assertTrue(hm.get("MainClass:A:classA").contains("A"));
 	}
 	
 
