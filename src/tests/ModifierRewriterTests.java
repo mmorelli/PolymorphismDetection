@@ -24,7 +24,7 @@ public class ModifierRewriterTests
 	public void setModifiersToPublicTest() throws NotFoundException, CannotCompileException, IOException
 	{
 		pool = ClassPool.getDefault(); 
-		pool.appendPathList(new File("src" + d + "testFiles"+ d + "testRewriter").getAbsolutePath());
+		pool.appendPathList(new File("testFiles"+ d + "testRewriter").getAbsolutePath());
 		
 		CtClass originClass = pool.get("ClassWithNonPublicFields");
 		CtField [] fields = originClass.getFields();

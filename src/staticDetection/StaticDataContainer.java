@@ -50,8 +50,6 @@ public class StaticDataContainer
 
 	public void addFieldValue(String id, String valueString) 
 	{
-		// richtiger type (valuestring) holen [todo]
-		
 		readAccesses.put(id, valueString);
 	}
 

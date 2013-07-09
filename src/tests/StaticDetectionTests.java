@@ -19,7 +19,7 @@ public class StaticDetectionTests
 	@Test
 	public void test1Package1() throws Throwable
 	{
-		StaticDetector detector = new StaticDetector(new File("src" + d + "testFiles"+ d + "testPackage1").getAbsolutePath());
+		StaticDetector detector = new StaticDetector(new File("testFiles"+ d + "testPackage1").getAbsolutePath());
 		detector.run();
 		MultiMap map = detector.getResult();
 		

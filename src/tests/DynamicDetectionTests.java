@@ -18,7 +18,7 @@ public class DynamicDetectionTests
 	@Test
 	public void test1Package1() throws Throwable
 	{
-		DynamicDetector detector = new DynamicDetector(new File("src" + d + "testFiles"+ d + "testPackage1").getAbsolutePath());
+		DynamicDetector detector = new DynamicDetector(new File("testFiles"+ d + "testPackage1").getAbsolutePath());
 		detector.run("MainClass", null);
 		MultiMap map = detector.getResult();
 		

@@ -52,7 +52,7 @@ public class Detector
 	{
 		try 
 		{
-			File libsDirectory = new File("src" + pathDelimiter + "libs");
+			File libsDirectory = new File("libs");
 			if (libsDirectory.isDirectory())
 			{
 			    File[] children = libsDirectory.listFiles();
