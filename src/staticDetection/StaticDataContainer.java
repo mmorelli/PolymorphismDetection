@@ -13,7 +13,7 @@ public class StaticDataContainer
 	private static HashMap <String, String> writeAccesses;
 	private static HashMap <String, String> readAccesses;
 	private static HashMap <String, String> returnValues;
-	private static ArrayList<String> casts;
+	private static HashMap <String, String> casts;
 	
 	private StaticDataContainer() 
 	{
@@ -21,7 +21,7 @@ public class StaticDataContainer
 		writeAccesses	  = new HashMap <String, String>();
 		readAccesses 	  = new HashMap <String, String>();
 		returnValues 	  = new HashMap <String, String>();
-		casts 			  = new ArrayList<String>();
+		casts 			  = new HashMap <String, String>();
 	}
 
 	public static StaticDataContainer getInstance() 
@@ -32,10 +32,12 @@ public class StaticDataContainer
 		return instance;
 	}
 	
-	public void addCastAtLine(String id) 
+	public void addCastAtLine(String id, String keyString) 
 	{
-		if (!casts.contains(id))
-			casts.add(id);
+//		if (!casts.contains(id))
+//			casts.add(id);
+		
+		casts.put(id, keyString);
 	}
 	
 	public void addReturnType(String id, String keyString) 
@@ -65,7 +67,15 @@ public class StaticDataContainer
 		Set<String> set = writeAccesses.keySet();
 		for (String key : set)
 		{
-			if (returnValues.containsKey(key) && !casts.contains(key))
+			if (readAccesses.containsKey(key) && casts.containsKey(key))
+			{
+				String theKey = writeAccesses.get(key);
+				String value = casts.get(key);
+				
+				keyValueContainer.add(theKey, value);	
+			}
+			
+			else if (returnValues.containsKey(key) && readAccesses.containsKey(key) && !casts.containsKey(key))
 			{
 				String theKey = writeAccesses.get(key);
 				String value = returnValues.get(key);

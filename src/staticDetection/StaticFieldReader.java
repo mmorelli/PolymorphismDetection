@@ -58,8 +58,16 @@ public class StaticFieldReader extends ExprEditor
 	
 	public void edit (Cast c)
 	{
-		String id = c.getEnclosingClass().getName() + "AtLine:" + c.getLineNumber();
-		
-		StaticDataContainer.getInstance().addCastAtLine(id);
+		try 
+		{
+			String id = c.getEnclosingClass().getName() + "AtLine:" + c.getLineNumber();
+			String keyString = c.getType().getName(); 
+			
+			StaticDataContainer.getInstance().addCastAtLine(id, keyString);
+		} 
+		catch (NotFoundException e) 
+		{
+			e.printStackTrace();
+		}
 	}
 }
