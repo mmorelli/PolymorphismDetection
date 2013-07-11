@@ -60,9 +60,6 @@ public class StaticDataContainer
 		return keyValueContainer;
 	}
 
-	// Merges the two hashmaps "keys" and "values" (if they have both the same Id they are merged)
-	// and saves the result to the member keyValueContainer
-	//
 	private void mergeKeyAndValues() 
 	{
 		Set<String> set = writeAccesses.keySet();
@@ -85,25 +82,4 @@ public class StaticDataContainer
 			}
 		}
 	}
-
-
-	
-	
-//	// Merges the two hashmaps "keys" and "values" (if they have both the same Id they are merged)
-//	// and saves the result to the member keyValueContainer
-//	//
-//	private void mergeKeyAndValues() 
-//	{
-//		Set<String> set = writeAccesses.keySet();
-//		for (String key : set)
-//		{
-//			if (readAccesses.containsKey(key))
-//			{
-//				String theKey = writeAccesses.get(key);
-//				String value = readAccesses.get(key);
-//				
-//				keyValueContainer.add(theKey, value);
-//			}
-//		}
-//	}
 }

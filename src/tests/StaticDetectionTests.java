@@ -28,6 +28,8 @@ public class StaticDetectionTests
 		
 		HashMap<String, ArrayList<String>> hm = map.getMultiMap();
 
+		assertTrue(hm.size() == 5);
+		
 		// Ignore Primitve Datatypes
 		//
 		assertFalse(hm.containsKey("MainClass:int:aInt3"));
@@ -49,8 +51,13 @@ public class StaticDetectionTests
 		assertTrue(hm.get("MainClass:Interface:I").contains("B"));
 		
 		assertTrue(hm.containsKey("MainClass:A:classA"));
-		assertTrue(hm.get("MainClass:A:classA").size() == 1);
+		assertTrue(hm.get("MainClass:A:classA").size() == 2);
 		assertTrue(hm.get("MainClass:A:classA").contains("A"));
+		assertTrue(hm.get("MainClass:A:classA").contains("B"));
+		
+		assertTrue(hm.containsKey("MainClass:A:classA2"));
+		assertTrue(hm.get("MainClass:A:classA2").size() == 1);
+		assertTrue(hm.get("MainClass:A:classA2").contains("A"));
 	}
 	
 

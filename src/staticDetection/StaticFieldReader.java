@@ -27,7 +27,7 @@ public class StaticFieldReader extends ExprEditor
 			
 			if (f.isReader())
 			{
-				String valueString = f.getField().getType().getName(); //+ ":" + f.getField().getName();
+				String valueString = f.getField().getType().getName();
 				StaticDataContainer.getInstance().addFieldValue(id, valueString);
 				
 //				System.out.println ("reader: "+ id + "-"+valueString);

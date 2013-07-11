@@ -26,6 +26,8 @@ public class DynamicDetectionTests
 		map.printPolymorphicFields();
 		
 		HashMap<String, ArrayList<String>> hm = map.getMultiMap();
+		
+		assertTrue(hm.size() == 11);
 
 		assertTrue(hm.containsKey("MainClass:java.lang.String:aString1"));
 		assertTrue(hm.get("MainClass:java.lang.String:aString1").size() == 1);
@@ -48,8 +50,9 @@ public class DynamicDetectionTests
 		assertTrue(hm.get("MainClass:java.lang.String:aString5").contains("java.lang.String"));
 		
 		assertTrue(hm.containsKey("MainClass:A:classA"));
-		assertTrue(hm.get("MainClass:A:classA").size() == 1);
+		assertTrue(hm.get("MainClass:A:classA").size() == 2);
 		assertTrue(hm.get("MainClass:A:classA").contains("A"));
+		assertTrue(hm.get("MainClass:A:classA").contains("B"));
 		
 		assertTrue(hm.containsKey("MainClass:B:classB"));
 		assertTrue(hm.get("MainClass:B:classB").size() == 1);
@@ -59,6 +62,19 @@ public class DynamicDetectionTests
 		assertTrue(hm.get("MainClass:Interface:I").size() == 2);
 		assertTrue(hm.get("MainClass:Interface:I").contains("A"));
 		assertTrue(hm.get("MainClass:Interface:I").contains("B"));
+		
+		assertTrue(hm.containsKey("MainClass:A:classA2"));
+		assertTrue(hm.get("MainClass:A:classA2").size() == 1);
+		assertTrue(hm.get("MainClass:A:classA2").contains("A"));
+		
+		assertTrue(hm.containsKey("MainClass:C:classC"));
+		assertTrue(hm.get("MainClass:C:classC").size() == 1);
+		assertTrue(hm.get("MainClass:C:classC").contains("C"));
+		
+		assertTrue(hm.containsKey("C:C:classC"));
+		assertTrue(hm.get("C:C:classC").size() == 2);
+		assertTrue(hm.get("C:C:classC").contains("C"));
+		assertTrue(hm.get("C:C:classC").contains("D"));
 	}
 		
 }
