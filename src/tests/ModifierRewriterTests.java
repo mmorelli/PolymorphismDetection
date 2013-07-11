@@ -35,7 +35,7 @@ public class ModifierRewriterTests
 		originClass.instrument (new ModifierRewriter());
 		
 		originClass.replaceClassName("ClassWithNonPublicFields", "ClassWithPublicFields");
-		originClass.writeFile(("src" + d + "testFiles"+ d + "testRewriter"));
+		originClass.writeFile(("testFiles"+ d + "testRewriter"));
 		
 		CtClass rewrittenClass = pool.get("ClassWithPublicFields");
 		fields = rewrittenClass.getFields();
