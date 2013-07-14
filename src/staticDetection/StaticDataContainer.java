@@ -33,10 +33,7 @@ public class StaticDataContainer
 	}
 	
 	public void addCastAtLine(String id, String keyString) 
-	{
-//		if (!casts.contains(id))
-//			casts.add(id);
-		
+	{	
 		casts.put(id, keyString);
 	}
 	
@@ -75,7 +72,7 @@ public class StaticDataContainer
 				keyValueContainer.add(theKey, value);	
 			}
 			
-			else if (returnValues.containsKey(key) && readAccesses.containsKey(key) && !casts.containsKey(key))
+			else if (readAccesses.containsKey(key) && returnValues.containsKey(key) && !casts.containsKey(key))
 			{
 				String theKey = writeAccesses.get(key);
 				String value = returnValues.get(key);

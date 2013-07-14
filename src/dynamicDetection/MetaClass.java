@@ -22,7 +22,7 @@ public class MetaClass extends Metaobject
     public void trapFieldWrite(String name, Object value) 
     {	
     	if (value != null)
-    	{	
+    	{
     		String type = DynamicDataContainer.getInstance().getFieldType(getClassMetaobject().getName(), name);
 
     		// HEURISTICS: Ignore primitive Datatypes
@@ -32,6 +32,8 @@ public class MetaClass extends Metaobject
 																+ type + ":" + name  , value.getClass().getName());
    
     	}
+    	else 
+    		System.out.println("MetaClass::field ("+ name + ") has value: null");
     	
         super.trapFieldWrite(name, value);
     }

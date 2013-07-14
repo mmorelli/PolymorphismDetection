@@ -75,6 +75,8 @@ public class DynamicDetectionTests
 		assertTrue(hm.get("C:C:classC").size() == 2);
 		assertTrue(hm.get("C:C:classC").contains("C"));
 		assertTrue(hm.get("C:C:classC").contains("D"));
+		
+		assertFalse(hm.containsKey("MainClass:C:staticClassC"));
 	}
 		
 }
