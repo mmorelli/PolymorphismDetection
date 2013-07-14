@@ -38,7 +38,10 @@ public class MainClass
 	private Interface I;
 	
 	private C classC;
-
+	
+	// static fields are not detected by the static and dynamic detector
+	//
+	private static C staticClassC;
 
 	
 	public MainClass()
@@ -116,5 +119,10 @@ public class MainClass
 		//
 		test.classC = new C();
 		test.classC.run ();
+		
+		// Test static fields
+		// Ignored by the static and dynamic detector
+		//
+		test.staticClassC = new C();
 	}
 }
