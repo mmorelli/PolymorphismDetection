@@ -204,7 +204,7 @@ public class DynamicDetector extends Detector
 	{
 		String parentClassName = ctClass.getSuperclass().getName() + ".class";
 		
-		// If parentclass is not inside "classNames" it should be loaded
+		// If parent class is not inside "classNames" it should be loaded
 		//
 		boolean found = false;
 		for (ClassPoolEntity entity : classNames)
@@ -214,7 +214,7 @@ public class DynamicDetector extends Detector
 		if (!found)
 			return true;
 		
-		// If parentclass is inside "classNames" and loaded, load class 
+		// If parent class is inside "classNames" and loaded, load class 
 		// 
 		for (ClassPoolEntity entity : classNames)
 			if (entity.getClassName().equals(parentClassName) && entity.getIsLoaded())

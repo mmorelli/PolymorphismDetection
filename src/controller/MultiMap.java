@@ -138,7 +138,7 @@ public class MultiMap
 		return dublicates;
 	}
 
-	// For unitTests only
+	// For unit tests only
 	//
 	public HashMap<String, ArrayList<String>> getMultiMap ()
 	{
