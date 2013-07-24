@@ -64,27 +64,23 @@ public class StaticDataContainer
 		Set<String> set = writeAccesses.keySet();
 		for (String key : set)
 		{
+			String theKey = writeAccesses.get(key);
+			
 			if (readAccesses.containsKey(key) && casts.containsKey(key))
 			{
-				String theKey = writeAccesses.get(key);
 				String value = casts.get(key);
-				
 				keyValueContainer.add(theKey, value);	
 			}
 			
 			else if (readAccesses.containsKey(key) && returnValues.containsKey(key) && !casts.containsKey(key))
 			{
-				String theKey = writeAccesses.get(key);
 				String value = returnValues.get(key);
-				
 				keyValueContainer.add(theKey, value);	
 			}
 			
 			else if (readAccesses.containsKey(key))
 			{
-				String theKey = writeAccesses.get(key);
 				String value = readAccesses.get(key);
-				
 				keyValueContainer.add(theKey, value);
 			}
 		}
