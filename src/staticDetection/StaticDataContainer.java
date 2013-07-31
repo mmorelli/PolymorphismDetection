@@ -12,7 +12,7 @@ public class StaticDataContainer
 	private static MultiMap keyValueContainer;
 	private static HashMap <String, String> writeAccesses;
 	private static HashMap <String, String> readAccesses;
-	private static HashMap <String, String> returnValues;
+	private static HashMap <String, String> returnTypes;
 	private static HashMap <String, String> casts;
 	
 	private StaticDataContainer() 
@@ -20,7 +20,7 @@ public class StaticDataContainer
 		keyValueContainer = new MultiMap();
 		writeAccesses	  = new HashMap <String, String>();
 		readAccesses 	  = new HashMap <String, String>();
-		returnValues 	  = new HashMap <String, String>();
+		returnTypes 	  = new HashMap <String, String>();
 		casts 			  = new HashMap <String, String>();
 	}
 
@@ -39,7 +39,7 @@ public class StaticDataContainer
 	
 	public void addReturnType(String id, String keyString) 
 	{
-		returnValues.put(id, keyString);
+		returnTypes.put(id, keyString);
 	}
 
 	public void addFieldKey(String id, String keyString) 
@@ -72,9 +72,10 @@ public class StaticDataContainer
 				keyValueContainer.add(theKey, value);	
 			}
 			
-			else if (readAccesses.containsKey(key) && returnValues.containsKey(key) && !casts.containsKey(key))
+			else if (readAccesses.containsKey(key) && returnTypes.containsKey(key) 
+					&& !casts.containsKey(key))
 			{
-				String value = returnValues.get(key);
+				String value = returnTypes.get(key);
 				keyValueContainer.add(theKey, value);	
 			}
 			
