@@ -1,4 +1,5 @@
 package controller;
+import staticDetection.InterfaceFieldContainer;
 import staticDetection.StaticDetector;
 import dynamicDetection.DynamicDetector;
 
@@ -33,6 +34,8 @@ public class Controller
 			System.out.println("***STATIC RESULT***");
 			staticResult.writeDumpToFile("staticResult.txt");
 			
+			System.out.println("HEURISTC: Field-writer with Interface-type detected: " + InterfaceFieldContainer.getInstance().size());
+			InterfaceFieldContainer.getInstance().writeDumpToFile("staticInterfaceFields.txt");
 			
 			DynamicDetector dc = new DynamicDetector (absolutPathToBinaryDirectory);
 
@@ -43,6 +46,8 @@ public class Controller
 			
 			System.out.println("***DYNAMIC RESULT***");
 			dynamicResult.writeDumpToFile("dynamicResult.txt");
+			
+			System.out.println ("FINISHED!");
 		} 
 		catch (Throwable e) 
 		{

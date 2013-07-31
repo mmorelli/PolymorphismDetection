@@ -1,4 +1,8 @@
 package staticDetection;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+
 import javassist.NotFoundException;
 import javassist.expr.Cast;
 import javassist.expr.ExprEditor;
@@ -17,9 +21,12 @@ public class StaticFieldReader extends ExprEditor
 			String id = f.getEnclosingClass().getName() + "AtLine:" + f.getLineNumber();
 			
 			if (f.isWriter())
-			{
+			{	
 				String keyString = f.getClassName() + ":" + f.getField().getType().getName() + ":" + f.getField().getName(); 
 				StaticDataContainer.getInstance().addFieldKey(id, keyString);
+				
+				if (f.getField().getType().isInterface())			// (was a HEURISTIC: "Interfaces are assumed to be polymorphic")
+					InterfaceFieldContainer.getInstance().addField (keyString);
 			}
 			
 			if (f.isReader())
