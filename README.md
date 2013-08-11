@@ -13,5 +13,5 @@ PolymorphismDetection Install Guide
    
    
    *Eclipse IDE: Make sure to have the Eclipse SDK V.4.2.2 installed.<br /> 
-                 Furhter you have to installed the JRE System Library [JavaSE-1.7].<br /> 
+                 Further you have to install the JRE System Library [JavaSE-1.7].<br /> 
                  The Project won't run on later Versions like JavaSE-1.6!<br />
