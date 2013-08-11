@@ -7,7 +7,7 @@ PolymorphismDetection Install Guide
 3) Import the downloaded "PolymorphismDetection-master" directory into the Eclipse IDE*<br />
 4) Import the downloaded "External-Projects-master" directory into the Eclipse IDE*<br />
 
-5) Open the file controller:Controller.java inside the Polymorphism Project.<br />
+5) Open the file controller:Controller.java inside the PolymorphismDetection Project.<br />
 6) Set there all the absolute Paths to your downloaded external Projects <br />
    to run the Polymorphism Detector with a external project like "Apache Commons JXPath", ect.<br />
    
