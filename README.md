@@ -1,7 +1,7 @@
 PolymorphismDetection Install Guide
 ===================================
 
-1) Download this Directory (PolymorphismDetection)
+1) Download this Directory (PolymorphismDetection)<br />
 2) Download the needed external projects from https://github.com/mmorelli/External-Projects
 
 3) Import the downloaded "PolymorphismDetection-master" directory into the Eclipse IDE*
